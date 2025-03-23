@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+
+@theme{
+    --font-primary:"Poppins", "sans-serif"
+}
+
+.footer-bg{
+background: rgb(27, 101, 247);
+    background: linear-gradient(90deg, rgba(27, 101, 247, 1) 0%, rgba(30, 119, 237, 0.9136029411764706) 50%, rgba(5, 59, 157, 0.896796218487395) 100%);
+}
+
+
+
+
+
+
+/* Container for the waves */
+.wavediv {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+
+/* SVG waves styling */
+.waves {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    /* Adjust height as needed */
+    margin-bottom: -7px;
+    /* Fix for gap below the waves */
+}
+
+/* Parallax effect for the waves */
+.parallax use {
+    animation: move-forever 25s cubic-bezier(0.55, 0.5, 0.45, 0.5) infinite;
+}
+
+/* Delay each wave layer for a staggered effect */
+.parallax use:nth-child(1) {
+    animation-delay: -2s;
+    animation-duration: 7s;
+}
+
+.parallax use:nth-child(2) {
+    animation-delay: -3s;
+    animation-duration: 10s;
+}
+
+.parallax use:nth-child(3) {
+    animation-delay: -4s;
+    animation-duration: 13s;
+}
+
+.parallax use:nth-child(4) {
+    animation-delay: -5s;
+    animation-duration: 20s;
+}
+
+/* Keyframes for the wave animation */
+@keyframes move-forever {
+    0% {
+        transform: translate3d(-90px, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(85px, 0, 0);
+    }
+}
