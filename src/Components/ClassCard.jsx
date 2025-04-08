@@ -4,7 +4,7 @@ import { IoPin } from "react-icons/io5";
 
 const ServiceCard = ({classData}) => {
   return (
-    <section className="mx-auto antialiased w-full relative my-10">
+    <section className="mx-auto antialiased w-full relative my-10 z-1">
         <IoPin size={30} color="red"  className="absolute z-10 -top-4 rotate-40 -right-2" />
       {/* Card Container */}
       <article className="md:flex shadow-md mx-auto group cursor-pointer transform duration-500 hover:-translate-y-1 rounded-l-2xl w-full">

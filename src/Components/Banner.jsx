@@ -1,6 +1,7 @@
 import WaveAnimation from "./Wave";
 import tech from "../tech.json";
 import Lottie from "lottie-react";
+import TypingAnimatedText from "./TypingAnimetion";
 
 const Banner = () => {
     return (
@@ -12,7 +13,9 @@ const Banner = () => {
                 CPI
               </h3>
               <h2 className="text-5xl font-bold md:text-9xl">IT CLUB</h2>
-              <p className="text-xl md:text-2xl">Bright Future Loading...</p>
+              <p className="text-xl md:text-2xl">
+                <TypingAnimatedText/>
+              </p>
             </div>
             <div>
               <Lottie
