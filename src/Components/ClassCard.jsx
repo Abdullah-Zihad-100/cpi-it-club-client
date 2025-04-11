@@ -2,10 +2,24 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
 import { IoPin } from "react-icons/io5";
 
-const ServiceCard = ({classData}) => {
+const ClassCard = ({ classData }) => {
+  const handleCopyLink = () => {
+    const link = "aaaaa";
+    navigator.clipboard
+      .writeText(link)
+      .then(alert("Copy The Link SuccessFully"))
+      .catch((error) => console.error("Failed To Copy", error));
+  };
+
   return (
     <section className="mx-auto antialiased w-full relative my-10 z-1">
-        <IoPin size={30} color="red"  className="absolute z-10 -top-4 rotate-40 -right-2" />
+      {classData?.isPin && (
+        <IoPin
+          size={30}
+          color="red"
+          className="absolute z-10 -top-4 rotate-40 -right-2"
+        />
+      )}
       {/* Card Container */}
       <article className="md:flex shadow-md mx-auto group cursor-pointer transform duration-500 hover:-translate-y-1 rounded-l-2xl w-full">
         {/* Image Section */}
@@ -19,17 +33,30 @@ const ServiceCard = ({classData}) => {
           {/* Main Content */}
           <div className="p-5 pb-10">
             <h1 className="text-2xl font-semibold text-gray-800 mt-4">
-              <span className="text-blue-700">Class Subject :</span> {classData?.classSubject}
+              <span className="text-blue-700">Class Subject :</span>{" "}
+              {classData?.classSubject}
             </h1>
             <p className="text-gray-600 mt-2 leading-relaxed text-sm">
               <span className="font-semibold text-blue-700">Topics : </span>
-             {classData?.topics}
+              {classData?.topics}
+            </p>
+            <p className="text-gray-600 mt-2 leading-relaxed text-sm">
+              <span className="font-semibold text-blue-700">Class Mode : </span>
+              {classData?.classMode || "Offline"}
             </p>
 
             <p className="text-gray-600 mt-2 leading-relaxed text-sm">
-              <span className="text-blue-700 font-semibold">Description : </span>
-             {classData?.description}
+              <span className="text-blue-700 font-semibold">
+                Description :{" "}
+              </span>
+              {classData?.description}
             </p>
+            <div
+              onClick={handleCopyLink}
+              className="text-blue-700 text-sm underline cursor-pointer"
+            >
+              Click Copy Online Class Link
+            </div>
           </div>
 
           {/* Footer Section */}
@@ -38,18 +65,22 @@ const ServiceCard = ({classData}) => {
               {/* Mentor and Time/Date */}
               <div className="w-full">
                 <div className="text-gray-700">
-                  <span className="text-gray-900 font-bold">Mentor : </span> {classData?.mentor}
+                  <span className="text-gray-900 font-bold">Mentor : </span>{" "}
+                  {classData?.mentor}
                 </div>
                 <div className="flex justify-between mt-3">
                   {/* Time */}
                   <div className="flex gap-2 items-center">
                     <FaClock color="gray" size={20} />
-                    <p className="text-gray-600 text-sm">{classData?.classDuration}</p>
+                    <p className="text-gray-600 text-sm">
+                      {classData?.classDuration}
+                    </p>
                   </div>
                   {/* Date */}
                   <div className="flex gap-2 items-center">
                     <FaRegCalendarAlt color="gray" size={20} />
-                    <p className="text-gray-600 text-sm">{classData?.classDate}
+                    <p className="text-gray-600 text-sm">
+                      {classData?.classDate}
                     </p>
                   </div>
                 </div>
@@ -62,4 +93,4 @@ const ServiceCard = ({classData}) => {
   );
 };
 
-export default ServiceCard;
+export default ClassCard;

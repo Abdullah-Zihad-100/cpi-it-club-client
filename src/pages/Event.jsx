@@ -4,12 +4,13 @@ import { axiosSecure } from "../Apis/axios";
 import { useEffect } from "react";
 import { IoLocationOutline } from "react-icons/io5";
 import { CiCalendar, CiMoneyBill } from "react-icons/ci";
+import { Link } from "react-router";
 
 const Event = () => {
 
       const [eventData, setEventData] = useState();
       useEffect(() => {
-        axiosSecure("/events.json").then((res) => setEventData(res?.data));
+        axiosSecure("/events").then((res) => setEventData(res?.data));
       }, []);
       console.log(eventData);
     
@@ -36,7 +37,7 @@ const Event = () => {
                 {event.title}
               </h2>
               <h2 className="text-white font-semibold rounded-3xl px-3 py-1 bg-blue-700 inline-block text-xs">
-                {event.type}
+                Main Event
               </h2>
               <p className="text-gray-700 lg:w-3/4">{event.description}</p>
               <div className="space-y-1">
@@ -53,13 +54,13 @@ const Event = () => {
                   <p className="text-gray-700">
                     TK{" "}
                     <del className="italic text-red-500">
-                      {event.price.original}
+                      {event?.price?.original}
                     </del>{" "}
-                    {event.price.discounted > 0 && event.price.discounted}
+                    {event?.price?.discounted > 0 && event.price.discounted}
                   </p>
                 </div>
-                <a
-                  href="#_"
+                <Link
+                  to={`/event/${event?._id}`}
                   className="relative inline-flex items-center justify-center p-4 px-12 py-3 overflow-hidden font-medium text-blue-700 transition duration-300 ease-out border-2 border-blue-700 rounded-full shadow-md group my-3"
                 >
                   <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full bg-blue-700 group-hover:translate-x-0 ease">
@@ -82,7 +83,7 @@ const Event = () => {
                     Read More
                   </span>
                   <span className="relative invisible">Read More</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>

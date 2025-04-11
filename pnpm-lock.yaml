@@ -27,8 +27,8 @@ importers:
         specifier: ^12.5.0
         version: 12.5.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       pnpm:
-        specifier: ^10.6.4
-        version: 10.6.4
+        specifier: ^10.8.0
+        version: 10.8.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -1426,8 +1426,8 @@ packages:
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
-  pnpm@10.6.4:
-    resolution: {integrity: sha512-2j1xW/0iqaEF5ugIjPx4JmmTMt7WDEI7FOxhOhhfFgIgZwL/D+TEOMsVyXkIHOTLAlaONksVF0UDpjx6jipfbA==}
+  pnpm@10.8.0:
+    resolution: {integrity: sha512-DoJxTRtbQ8dGEBk8sgc0iXwdAN6J0OGEIK68WXf6E9eAqcsFc0Yk6B69gcyHbNRkeUhQZBxIuVRDJrViLKKZcQ==}
     engines: {node: '>=18.12'}
     hasBin: true
 
@@ -3012,7 +3012,7 @@ snapshots:
 
   picocolors@1.1.1: {}
 
-  pnpm@10.6.4: {}
+  pnpm@10.8.0: {}
 
   postcss@8.5.3:
     dependencies:

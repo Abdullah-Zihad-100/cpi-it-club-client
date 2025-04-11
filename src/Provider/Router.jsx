@@ -8,6 +8,8 @@ import Login from "../pages/login";
 import Register from "../pages/register";
 import PrivetRoute from "./PrivateRoute";
 import Classes from "../pages/Classes";
+import CourseDetails from "../pages/CourseDetails";
+import EventDetails from "../pages/EventDetails";
 
 export const Router = createBrowserRouter([
   {
@@ -35,6 +37,15 @@ export const Router = createBrowserRouter([
       {
         path: "/classes",
         element: <Classes />,
+      },
+      // details page .......
+      {
+        path: "/course/:id",
+        element: <CourseDetails/>,
+      },
+      {
+        path: "/event/:id",
+        element: <EventDetails/>,
       },
     ],
   },

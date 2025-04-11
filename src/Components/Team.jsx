@@ -5,16 +5,17 @@ import "swiper/css/pagination";
 import { FreeMode, Pagination } from "swiper/modules";
 import ProfileCard from "../Components/ProfileCard";
 import Title from "./Title";
-import { axiosSecure } from "../Apis/axios";
+// import { axiosSecure } from "../Apis/axios";
 import { useEffect } from "react";
 import { useState } from "react";
+import axios from "axios";
 
 const Team = () => {
   const [teamData, setTeamData] = useState();
   useEffect(() => {
-    axiosSecure("/Team.json").then((res) => setTeamData(res?.data));
+    axios("/Team.json").then((res) => setTeamData(res?.data));
   }, []);
-  console.log(teamData);
+  console.log(teamData);                
   return (
     <div className="max-w-7xl mx-auto py-20 px-5">
       <Title heading="Meet Our Team" title="Get to know our team members" />

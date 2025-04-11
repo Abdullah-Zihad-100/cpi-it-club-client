@@ -6,7 +6,7 @@ const ProfileCard = ({teamMember}) => {
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300 hover:shadow-indigo-500/50 dark:hover:shadow-blue-900/50 mb-16">
       <div className="relative h-32 bg-gradient-to-r from-indigo-600 to-blue-700">
         <img
-          src={teamMember?.profileImg}
+          src={teamMember?.profile}
           alt={teamMember?.name}
           className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-1/2 w-28 h-28 rounded-full border-4 border-white dark:border-gray-800 transition-transform duration-300 hover:scale-105 object-cover"
         />

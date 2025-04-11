@@ -1,38 +1,57 @@
-[
-    {
-      "title": "Typing Contest Event CPI IT CLUB",
-      "type": "Main Event",
-      "description": "The CPI IT Club-sponsored ICT Cup is not your typical futsal competition. It's a special occasion that motivates IT pros to take a break from their typical tech routine and get moving while mingling with others in a laid-back and enjoyable environment.",
-      "location": "Academy Road, Feni, Bangladesh",
-      "date": "June 12, 2025",
-      "price": {
+  [
+  {
+   
+    "title": "Typing Contest Event CPI",
+    "club": "IT CLUB",
+    "description": "The CPI IT Club-sponsored ICT Cup is not your typical competition. It's a special occasion that motivates IT pros to take a break from their typical tech routine and enjoy mingling in a laid-back and fun environment.",
+    "location": "Academy Rode, Feni, Bangladesh",
+    "date": "June 12, 2025",
+     "price": {
         "original": 199,
         "discounted": 0
       },
-      "image": "https://img.freepik.com/free-psd/black-friday-poster-template_23-2150825440.jpg"
+    "prizes": {
+      "first": "Trophy + 3000 TK",
+      "second": "Medal + 2000 TK",
+      "third": "Medal + 1000 TK"
     },
-    {
-      "title": "Web Development Workshop",
-      "type": "Workshop",
-      "description": "Join us for an intensive web development workshop where you'll learn the latest technologies like React, Node.js, and MongoDB. Perfect for beginners and intermediate developers.",
-      "location": "Tech Hub, Dhaka, Bangladesh",
-      "date": "November 15, 2023",
-      "price": {
-        "original": 499,
-        "discounted": 399
-      },
-      "image": "https://media.istockphoto.com/id/1371339413/photo/co-working-team-meeting-concept-businessman-using-smart-phone-and-digital-tablet-and-laptop.jpg"
-    },
-    {
-      "title": "App Development Hackathon",
-      "type": "Hackathon",
-      "description": "Participate in our 24-hour hackathon focused on building innovative mobile apps. Collaborate with like-minded developers and win exciting prizes!",
-      "location": "Innovation Center, Chittagong, Bangladesh",
-      "date": "December 10, 2023",
-      "price": {
+    "image": "https://img.freepik.com/free-psd/black-friday-poster-template_23-2150825440.jpg"
+  },
+  {
+   
+    "price": {
         "original": 299,
         "discounted": 199
       },
-      "image": "https://img.freepik.com/free-vector/hackathon-concept-illustration_114360-8304.jpg"
-    }
-  ]
+    "title": "Hackathon Challenge 2025",
+    "club": "Dev Club",
+    "description": "Join the ultimate coding marathon! Collaborate, innovate, and compete for exciting rewards in a 24-hour hackathon event.",
+    "location": "Tech Park, Dhaka, Bangladesh",
+    "date": "August 5, 2025",
+    "participationFee": "299",
+    "prizes": {
+      "first": "Laptop + 10,000 TK",
+      "second": "Tablet + 5000 TK",
+      "third": "Smartwatch + 3000 TK"
+    },
+    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTr5OzNJPX4D-IiN_2SVkoN2JDyxnTEv22tVw&s"
+  },
+  {
+    "price": {
+        "original": 299,
+        "discounted": 199
+      },
+    "title": "Graphic Design Showdown",
+    "club": "Creative Hub",
+    "description": "A creative event where designers battle it out with their best digital artwork. Show your skills, win rewards, and gain recognition.",
+    "location": "Visual Hall, Chattogram, Bangladesh",
+    "date": "September 20, 2025",
+    "participationFee": "149",
+    "prizes": {
+      "first": "Wacom Tablet + 5000 TK",
+      "second": "Graphic Pack + 3000 TK",
+      "third": "T-shirt + 1000 TK"
+    },
+    "image": "https://img.freepik.com/free-vector/hackathon-concept-illustration_114360-8304.jpg"
+  }
+]

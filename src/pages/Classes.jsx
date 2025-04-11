@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { axiosSecure } from "../Apis/axios";
-import ServiceCard from "../Components/ClassCard";
 import Title from "../Components/Title";
 import { useEffect } from "react";
+import ClassCard from "../Components/ClassCard";
 
 export default function Classes() {
   const [classData, setClassData] = useState();
   useEffect(() => {
-    axiosSecure("/classes.json").then((res) => setClassData(res?.data));
-  }, []);
+    axiosSecure("/classes").then((res) => setClassData(res?.data));}, []);
   console.log(classData);
 
   return (
@@ -20,7 +19,7 @@ export default function Classes() {
        </div>
      {
       classData?.map(classData=>(
-        <ServiceCard key={classData?.className} classData={classData}/>
+        <ClassCard key={classData?.className} classData={classData}/>
       ))
      }
 </div>
