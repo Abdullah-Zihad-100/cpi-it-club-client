@@ -10,6 +10,12 @@ import PrivetRoute from "./PrivateRoute";
 import Classes from "../pages/Classes";
 import CourseDetails from "../pages/CourseDetails";
 import EventDetails from "../pages/EventDetails";
+import Dashboard from "../Dashboard/Dashboard";
+import ManageNotice from "../Dashboard/pages/ManageNotice";
+import ManageClasses from "../Dashboard/pages/ManageClasses";
+import ManageCourses from "../Dashboard/pages/ManageCourses";
+import ManageEvents from "../Dashboard/pages/ManageEvents";
+import EditClasses from "../Dashboard/pages/EditClasses";
 
 export const Router = createBrowserRouter([
   {
@@ -37,8 +43,8 @@ export const Router = createBrowserRouter([
       {
         path: "/classes",
         element: <Classes />,
-      },
       // details page .......
+      },
       {
         path: "/course/:id",
         element: <CourseDetails/>,
@@ -48,6 +54,32 @@ export const Router = createBrowserRouter([
         element: <EventDetails/>,
       },
     ],
+  },
+  {
+    path:"/dashboard",
+    element:<Dashboard/>,
+    children:[
+      {
+        path:"manage-notice",
+        element:<ManageNotice/>
+      },
+      {
+        path:"manage-classes",
+        element:<ManageClasses/>
+      },
+      {
+        path:"manage-classes/edit/:id",
+        element:<EditClasses/>
+      },
+      {
+        path:"manage-events",
+        element:<ManageEvents/>
+      },
+      {
+        path:"manage-courses",
+        element:<ManageCourses/>
+      },
+    ]
   },
   {
     path: "/login",

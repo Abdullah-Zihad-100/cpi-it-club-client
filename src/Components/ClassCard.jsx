@@ -1,16 +1,38 @@
+import toast from "react-hot-toast";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { FaClock } from "react-icons/fa";
 import { IoPin } from "react-icons/io5";
+import { axiosSecure } from "../Apis/axios";
+import { Link } from "react-router";
 
-const ClassCard = ({ classData }) => {
+const ClassCard = ({ classData ,refetch}) => {
+  console.log(classData);
   const handleCopyLink = () => {
-    const link = "aaaaa";
+    const link = classData?.link;
     navigator.clipboard
       .writeText(link)
-      .then(alert("Copy The Link SuccessFully"))
+      .then(toast.success("Class Link Copy Successful"))
       .catch((error) => console.error("Failed To Copy", error));
   };
 
+
+    const handleDelete = async (id) => {
+      const confirm = window.confirm(
+        "Are you sure you want to delete this class?"
+      );
+      if (!confirm) return;
+
+      try {
+        await axiosSecure.delete(`/classes/${id}`);
+        toast.success("Class deleted successfully");
+        refetch();
+      } catch (error) {
+        console.error("Delete failed:", error);
+        toast.error("Failed to delete class");
+      }
+    };
+
+  
   return (
     <section className="mx-auto antialiased w-full relative my-10 z-1">
       {classData?.isPin && (
@@ -27,7 +49,6 @@ const ClassCard = ({ classData }) => {
           className="w-full max-h-[400px] object-cover md:w-52 md:rounded-l-xl"
           src={classData?.img}
         />
-
         {/* Content Section */}
         <div className="flex-1">
           {/* Main Content */}
@@ -51,12 +72,14 @@ const ClassCard = ({ classData }) => {
               </span>
               {classData?.description}
             </p>
-            <div
-              onClick={handleCopyLink}
-              className="text-blue-700 text-sm underline cursor-pointer"
-            >
-              Click Copy Online Class Link
-            </div>
+            {classData?.link && (
+              <div
+                onClick={handleCopyLink}
+                className="text-blue-700 text-sm underline cursor-pointer"
+              >
+                Click Copy Online Class Link
+              </div>
+            )}
           </div>
 
           {/* Footer Section */}
@@ -86,6 +109,20 @@ const ClassCard = ({ classData }) => {
                 </div>
               </div>
             </div>
+          </div>
+          <div className="flex gap-2 ms-4 pb-4">
+            <Link to={`edit/${classData?._id}`}>
+              <button className="text-white bg-blue-700 py-2 px-5 rounded">
+                Edit
+              </button>
+            </Link>
+           
+            <button
+              onClick={() => handleDelete(classData._id)}
+              className="text-white bg-red-700 py-2 px-5 rounded"
+            >
+              Delete
+            </button>
           </div>
         </div>
       </article>

@@ -1,18 +1,18 @@
 import { useParams } from "react-router";
 import Title from "../Components/Title";
-import { useEffect, useState } from "react";
-import { axiosSecure } from "../Apis/axios";
+import { useQuery } from "@tanstack/react-query";
+import { getSingleCourses } from "../Apis/apis";
 
 const CourseDetails = () => {
   const { id } = useParams();
-  const [course, setCourse] = useState(null);
-
-  useEffect(() => {
-    axiosSecure.get("/course.json").then((res) => {
-      const found = res.data.find((c) => c.id === parseInt(id));
-      setCourse(found);
+    const { data: course = [] } = useQuery({
+      queryKey: ["course"],
+      queryFn: async () => {
+        return await getSingleCourses(id);
+      },
     });
-  }, [id]);
+  
+
 
   return (
     <div className="container mx-auto pt-20">
@@ -23,8 +23,8 @@ const CourseDetails = () => {
           {/* Course Image */}
           <div className="rounded-2xl overflow-hidden shadow-lg mb-6">
             <img
-              src={course.img}
-              alt={course.title}
+              src={course?.img}
+              alt={course?.title}
               className="w-full h-80 object-cover"
             />
           </div>
@@ -32,9 +32,9 @@ const CourseDetails = () => {
           {/* Course Info */}
           <div className="bg-[#0F172A] rounded-2xl p-6 shadow-md">
             <h1 className="text-3xl font-bold text-blue-400 mb-4">
-              {course.title}
+              {course?.title}
             </h1>
-            <p className="mb-4 text-gray-300">{course.description}</p>
+            <p className="mb-4 text-gray-300">{course?.description}</p>
 
             {/* Topics */}
             <div className="mb-4">
@@ -42,7 +42,7 @@ const CourseDetails = () => {
                 What you'll learn:
               </h2>
               <ul className="list-disc list-inside space-y-1 text-gray-200">
-                {course.topics.map((topic, i) => (
+                {course?.topics?.map((topic, i) => (
                   <li key={i}>{topic}</li>
                 ))}
               </ul>

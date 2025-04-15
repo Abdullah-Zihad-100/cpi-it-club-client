@@ -3,7 +3,7 @@ import loader from "../loader.json";
 
 export default function Loader() {
   return (
-    <div>
+    <div className="mx-auto">
          <Lottie
                 animationData={loader}
                 className="w-[250px] mx-auto flex justify-center items-center h-screen"

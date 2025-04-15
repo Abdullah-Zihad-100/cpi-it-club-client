@@ -25,7 +25,7 @@ const CourseCard = ({ course }) => {
         {/* button */}
         <div className="flex justify-between items-center gap-5">
           <Link
-            to={`/course/${course?.id}`}
+            to={`/course/${course?._id}`}
             className="relative inline-flex  items-center justify-center px-8 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out border-2 border-blue-700 rounded-full shadow-md group bg-blue-700 hover:bg-transparent hover:text-blue-700"
           >
             <span className="absolute inset-0 flex items-center justify-center w-full h-full text-blue-700 duration-300 -translate-x-full bg-transparent group-hover:translate-x-0 ease">

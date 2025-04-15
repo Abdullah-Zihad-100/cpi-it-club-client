@@ -51,8 +51,8 @@ const Team = () => {
           },
         }}
       >
-        {teamData?.map((teamMember) => (
-          <div key={teamMember._id}>
+        {teamData?.map((teamMember,index) => (
+          <div key={index}>
             <SwiperSlide>
               <ProfileCard teamMember={teamMember} />
             </SwiperSlide>

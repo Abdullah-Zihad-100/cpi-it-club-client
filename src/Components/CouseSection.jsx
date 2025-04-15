@@ -1,15 +1,17 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Title from "./Title";
 import { FaArrowDown, FaArrowUp } from "react-icons/fa6";
 import CourseCard from "./CouseCard";
-import { axiosSecure } from "../Apis/axios";
+import { useQuery } from "@tanstack/react-query";
+import { getCourses } from "../Apis/apis";
 
 const CourseSection = () => {
-  // Sample course data - replace with your actual data
-  const [courses,setCourses]=useState([]);
-  useEffect(()=>{
-      axiosSecure("/courses").then((res) => setCourses(res?.data));
-  },[])
+  const { data: courses = [] } = useQuery({
+    queryKey: ["courses"],
+    queryFn: async () => {
+     return await getCourses();
+    },
+  });
 
   const [showAll, setShowAll] = useState(false);
   const displayedCourses = showAll ? courses : courses.slice(0, 4);
@@ -20,7 +22,7 @@ const CourseSection = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2  gap-5 justify-items-center items-center px-4">
         {displayedCourses.map((course) => (
-          <CourseCard key={course.id} course={course} />
+          <CourseCard key={course._id} course={course} />
         ))}
       </div>
 

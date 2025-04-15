@@ -1,28 +1,31 @@
-import { useState } from "react";
-import { axiosSecure } from "../Apis/axios";
 import Title from "../Components/Title";
-import { useEffect } from "react";
 import ClassCard from "../Components/ClassCard";
+import { useQuery } from "@tanstack/react-query";
+import { getClasses } from "../Apis/apis";
+// import { useParams } from "react-router";
 
 export default function Classes() {
-  const [classData, setClassData] = useState();
-  useEffect(() => {
-    axiosSecure("/classes").then((res) => setClassData(res?.data));}, []);
-  console.log(classData);
+  // const { id } = useParams();
+
+  const { data: classData = [] } = useQuery({
+    queryKey: ["classes"],
+    queryFn: async () => {
+      const res = await getClasses(`classes`);
+      return res;
+    },
+    // enabled: !!id,
+  });
 
   return (
     <div className="mb-10">
-
-        <div className="max-w-7xl mx-auto px-5">
-       <div className="pt-20">
-       <Title  title={"Next Class Date"} heading={"Our Classes"}/>
-       </div>
-     {
-      classData?.map(classData=>(
-        <ClassCard key={classData?.className} classData={classData}/>
-      ))
-     }
-</div>
+      <div className="max-w-7xl mx-auto px-5">
+        <div className="pt-20">
+          <Title title={"Next Class Date"} heading={"Our Classes"} />
+        </div>
+        {classData?.map((classData) => (
+          <ClassCard key={classData?._id} classData={classData} />
+        ))}
+      </div>
     </div>
-  )
+  );
 }
