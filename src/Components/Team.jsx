@@ -5,17 +5,16 @@ import "swiper/css/pagination";
 import { FreeMode, Pagination } from "swiper/modules";
 import ProfileCard from "../Components/ProfileCard";
 import Title from "./Title";
-// import { axiosSecure } from "../Apis/axios";
+import { axiosSecure } from "../Apis/axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios";
 
 const Team = () => {
   const [teamData, setTeamData] = useState();
   useEffect(() => {
-    axios("/Team.json").then((res) => setTeamData(res?.data));
+    axiosSecure("/members").then((res) => setTeamData(res?.data));
   }, []);
-  console.log(teamData);                
+  console.log(teamData);
   return (
     <div className="max-w-7xl mx-auto py-20 px-5">
       <Title heading="Meet Our Team" title="Get to know our team members" />
@@ -51,13 +50,15 @@ const Team = () => {
           },
         }}
       >
-        {teamData?.map((teamMember,index) => (
-          <div key={index}>
-            <SwiperSlide>
+        {teamData?.length < 1 ? (
+          <h4 className="sm:text-3xl text-xl text-center my-32">No members available</h4>
+        ) : (
+          teamData?.map((teamMember, index) => (
+            <SwiperSlide key={index + 1}>
               <ProfileCard teamMember={teamMember} />
             </SwiperSlide>
-          </div>
-        ))}
+          ))
+        )}
       </Swiper>
     </div>
   );

@@ -9,26 +9,27 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { useEffect } from "react";
+import { removeToken } from "../Apis/apis";
 
 export const AuthContext = createContext(null);
 
-const AuthProvider = ({children}) => {
+const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(()=>{
-     
-       const unSubsribe= onAuthStateChanged(auth,(currentUser)=>{
-          setUser(currentUser)
-          console.log("Current User---->", currentUser)
-          setLoading(true)
-        })
-        return ()=>unSubsribe()
-  },[])
+  useEffect(() => {
+    const unSubsribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("Current User---->", currentUser);
+      setLoading(true);
+    });
+    return () => unSubsribe();
+  }, []);
 
-  const updateUserProfile = (name) => {
+  const updateUserProfile = (name, photoUrl) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
+      photoURL: photoUrl,
     });
   };
 
@@ -43,8 +44,10 @@ const AuthProvider = ({children}) => {
     return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const logOut = () => {
+  const logOut = async () => {
     setLoading(false);
+    const res = await removeToken();
+    console.log("Delete Token-------->",res);
     return signOut(auth);
   };
 
@@ -54,8 +57,10 @@ const AuthProvider = ({children}) => {
     updateUserProfile,
     logOut,
     user,
-    loading
+    loading,
   };
-  return <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={authInfo}>{children}</AuthContext.Provider>
+  );
 };
 export default AuthProvider;

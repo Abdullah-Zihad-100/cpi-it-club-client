@@ -31,7 +31,7 @@ const ManageNotice = () => {
       refetch();
     } catch (err) {
       console.error("Add error:", err);
-      toast.error("❌ Failed to add notice");
+      toast.error("Failed to add notice");
     }
   };
 
@@ -42,7 +42,7 @@ const ManageNotice = () => {
       refetch();
     } catch (err) {
       console.error("Delete error:", err);
-      toast.error("❌ Failed to delete notice");
+      toast.error(" Failed to delete notice");
     }
   };
 
@@ -53,7 +53,7 @@ const ManageNotice = () => {
           <h2 className="text-3xl font-bold text-blue-900 mb-6">
             📢 Notice Board
           </h2>
-          <div className="sm:grid md:grid-cols-2 gap-8">
+          <div className="sm:grid lg:grid-cols-2 gap-8">
             {/* Add Notice */}
             <div className="bg-white p-6 rounded-2xl shadow-lg border border-blue-100">
               <h3 className="text-xl font-semibold text-blue-700 mb-4">

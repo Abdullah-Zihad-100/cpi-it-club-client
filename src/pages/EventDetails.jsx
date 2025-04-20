@@ -23,7 +23,7 @@ const EventDetails = () => {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6 text-white pt-36">
+    <div className="max-w-7xl h-screen mx-auto p-6 text-white pt-36">
       {/* Combined Event Card */}
       <div className="bg-[#0F172A] rounded-3xl overflow-hidden shadow-2xl md:flex">
         {/* Left Image Side */}
@@ -51,15 +51,15 @@ const EventDetails = () => {
           <div className="grid grid-cols-1 gap-3 text-gray-300 mb-4">
             <div>
               <strong className="text-blue-400">Location:</strong>{" "}
-              {event.location} {/* Dynamic location */}
+              {event?.location} {/* Dynamic location */}
             </div>
             <div>
-              <strong className="text-blue-400">Date:</strong> {event.date}{" "}
+              <strong className="text-blue-400">Date:</strong> {event?.date}{" "}
               {/* Dynamic event date */}
             </div>
             <div>
               <strong className="text-blue-400">Participation Fee:</strong> TK{" "}
-              <span className="text-red-400">{event.price.original}</span>{" "}
+              <span className="text-red-400">{event?.price?.original}</span>{" "}
               {/* Dynamic participation fee */}
             </div>
             <div>

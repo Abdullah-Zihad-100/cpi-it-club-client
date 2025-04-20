@@ -67,9 +67,11 @@ const Notice = () => {
             </h2>
 
             <ul className="list-disc list-inside space-y-2 text-blue-600">
-              {noticeData.map((not) => (
-                <li key={not?._id}>{not?.title} </li>
-              ))}
+              {noticeData?.length > 0
+                ? noticeData?.map((not) => (
+                    <li key={not?._id}>{not?.title} </li>
+                  ))
+                : "Notice Not Found"}
             </ul>
 
             <button

@@ -3,8 +3,8 @@ import React from "react";
 const ProfileCard = ({teamMember}) => {
   console.log(teamMember);
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300 hover:shadow-indigo-500/50 dark:hover:shadow-blue-900/50 mb-16">
-      <div className="relative h-32 bg-gradient-to-r from-indigo-600 to-blue-700">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300 hover:shadow-blue-500/50 dark:hover:shadow-blue-900/50 mb-16">
+      <div className="relative h-32 bg-gradient-to-r from-blue-600 to-blue-700">
         <img
           src={teamMember?.profile}
           alt={teamMember?.name}
@@ -13,7 +13,7 @@ const ProfileCard = ({teamMember}) => {
       </div>
       <div className="pt-16 pb-6 px-6 text-center bg-white">
         <h1 className="text-2xl font-bold mb-1">{teamMember?.name}</h1>
-        <p className="text-indigo-600 dark:text-indigo-400 font-semibold mb-4">
+        <p className="text-blue-600 dark:text-blue-400 font-semibold mb-4">
           {teamMember?.post}
         </p>
         <p className="text-gray-600 dark:text-gray-600 mb-4">
@@ -24,7 +24,7 @@ const ProfileCard = ({teamMember}) => {
           {/* Email Icon */}
           <a
             href="mailto:example@example.com" // Replace with the actual email
-            className="text-gray-600 hover:text-indigo-800 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors duration-300"
+            className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
           >
             <svg
               className="w-6 h-6"
@@ -43,7 +43,7 @@ const ProfileCard = ({teamMember}) => {
           {/* Facebook Icon */}
           <a
             href="https://www.facebook.com/example" // Replace with the actual Facebook link
-            className="text-gray-600 hover:text-indigo-800 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors duration-300"
+            className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
           >
             <svg
               className="w-6 h-6"
@@ -62,7 +62,7 @@ const ProfileCard = ({teamMember}) => {
           {/* LinkedIn Icon */}
           <a
             href="https://www.linkedin.com/in/example" // Replace with the actual LinkedIn link
-            className="text-gray-600 hover:text-indigo-800 dark:text-gray-500 dark:hover:text-indigo-400 transition-colors duration-300"
+            className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
           >
             <svg
               className="w-6 h-6"

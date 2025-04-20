@@ -1,94 +1,111 @@
 import Lottie from "lottie-react";
-import React, { useState } from "react"; // Import useState
+import React, { useState } from "react";
 import robot from "../robot.json";
-import { Link, useLocation, useNavigate } from "react-router"; // Corrected import
-import useAuth from "../Hooks/useAuth"; // Assuming you have a useAuth hook for login
+import { Link, useLocation, useNavigate } from "react-router";
+import useAuth from "../Hooks/useAuth";
+import bgImg from "../assets/bgImg.png";
+import toast from "react-hot-toast";
+import { getToken } from "../Apis/apis";
 
 const Login = () => {
-  const { loginUser } = useAuth(); // Assuming loginUser is a function from useAuth
-  const [isLoggingIn, setIsLoggingIn] = useState(false); // State for login process
-  const navigate=useNavigate();
+  const { loginUser } = useAuth();
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
 
-
   const handleLogin = async (e) => {
     e.preventDefault();
-    setIsLoggingIn(true); // Start login process
+    setIsLoggingIn(true);
 
     const email = e.target.email.value;
     const password = e.target.password.value;
 
     try {
+      const res= await getToken(email);
+      console.log("Token------>",res);
       const result = await loginUser(email, password);
       console.log("Login successful:", result);
-      navigate(from,{replace:true});
-      // Redirect or perform actions after successful login
+      navigate(from, { replace: true });
     } catch (error) {
-      console.error("Error during login:", error.message);
+      toast.error("Login Failed")
+      console.error("Login error:", error.message);
     } finally {
-      setIsLoggingIn(false); // End login process
+      setIsLoggingIn(false);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto flex justify-center items-center h-screen w-screen">
-      <div>
-        <div
-          className={`md:flex mx-auto py-5 md:shadow-2xl shadow-blue-200 md:px-10 px-3 items-center rounded-lg ${
-            isLoggingIn ? "opacity-50" : "opacity-100"
-          }`} // Reduce opacity during login
-        >
-          <div className="contact_img flex-1 w-full">
-            <Lottie
-              animationData={robot}
-              className="lg:w-[400px] w-[300px] mx-auto my-5"
-              loop={true}
-            />
-          </div>
-          <div className="w-full flex-1 shadow-xl shadow-blue-200 p-10 rounded-lg">
-            <h2 className="text-4xl font-bold text-center text-[#1447e6] mb-[20px]">
-              Login
-            </h2>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center relative px-4 py-10"
+      style={{
+        backgroundImage: `url(${bgImg})`,
+      }}
+    >
+      {/* Overlay tint */}
+      <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm z-0"></div>
 
-            <form onSubmit={handleLogin} className="w-full">
-              <input
-                type="email"
-                name="email"
-                required
-                placeholder="Your email"
-                className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                disabled={isLoggingIn} // Disable input during login
-              />
-              <input
-                type="password"
-                name="password"
-                required
-                placeholder="Password"
-                className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                disabled={isLoggingIn} // Disable input during login
-              />
-              <p className="text-xs text-gray-600 my-2">Forget password?</p>
+      {/* Glassmorphic Card */}
+      <div className="relative z-10 w-full max-w-md mx-auto bg-white/10 border border-white/30 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl text-white">
+        <div className="flex justify-center mb-4">
+          <Lottie animationData={robot} className="w-36 h-36" loop />
+        </div>
 
-              <button
-                type="submit"
-                className={`w-full py-2 rounded-[6px] border border-[#1447e6] text-[17px] cursor-pointer transition-all duration-300 font-[500] ${
-                  isLoggingIn
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-[#1447e6] text-white hover:bg-white hover:text-[#1447e6]"
-                }`}
-                disabled={isLoggingIn}
-              >
-                {isLoggingIn ? "Logging in..." : "Login"}
-                </button>
-              <p className="text-sm font-semibold text-gray-600 my-2">
-                Create a new account?{" "}
-                <Link to={"/register"} className="text-blue-700 text-base">
-                  Register
-                </Link>
-              </p>
-            </form>
+        <h2 className="text-3xl font-bold text-center text-white mb-6">
+          Welcome Back
+        </h2>
+
+        <form onSubmit={handleLogin} className="space-y-5">
+          <input
+            type="email"
+            name="email"
+            required
+            placeholder="Email"
+            className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+            disabled={isLoggingIn}
+          />
+          <input
+            type="password"
+            name="password"
+            required
+            placeholder="Password"
+            className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+            disabled={isLoggingIn}
+          />
+          <div className="text-sm text-right text-white/80 hover:underline cursor-pointer">
+            Forgot password?
           </div>
+
+          <button
+            type="submit"
+            disabled={isLoggingIn}
+            className={`w-full py-3 rounded-xl font-semibold text-lg transition duration-300 ${
+              isLoggingIn
+                ? "bg-white/40 text-white/70 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
+          >
+            {isLoggingIn ? "Logging in..." : "Login"}
+          </button>
+
+          <p className="text-sm text-center text-white/80">
+            Don’t have an account?{" "}
+            <Link
+              to="/register"
+              className="text-white font-medium hover:underline"
+            >
+              Register
+            </Link>
+          </p>
+        </form>
+
+        <div className="mt-6 flex justify-center">
+          <Link
+            to="/"
+            className="text-white/80 hover:text-white transition underline"
+          >
+            ← Back to Home
+          </Link>
         </div>
       </div>
     </div>

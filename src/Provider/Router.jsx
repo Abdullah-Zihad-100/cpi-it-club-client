@@ -16,6 +16,14 @@ import ManageClasses from "../Dashboard/pages/ManageClasses";
 import ManageCourses from "../Dashboard/pages/ManageCourses";
 import ManageEvents from "../Dashboard/pages/ManageEvents";
 import EditClasses from "../Dashboard/pages/EditClasses";
+import Profile from "../pages/Profile";
+import ManageUsers from "../Dashboard/pages/ManageUsers";
+import ManageGallery from "../Dashboard/pages/manageGallery";
+import AdminRoute from "./AdminRoute";
+import ManageMembers from "../Dashboard/pages/ManageMembers";
+import EditProfile from "../pages/EditProfile";
+import Assignments from "../pages/Assignments";
+import ManageAssignments from "../Dashboard/pages/ManageAssignments";
 
 export const Router = createBrowserRouter([
   {
@@ -28,9 +36,7 @@ export const Router = createBrowserRouter([
       },
       {
         path: "/about-us",
-        element: <PrivetRoute>
-          <About />
-        </PrivetRoute>,
+        element: <About />,
       },
       {
         path: "/event",
@@ -42,44 +48,101 @@ export const Router = createBrowserRouter([
       },
       {
         path: "/classes",
-        element: <Classes />,
-      // details page .......
+        element: (
+          <PrivetRoute>
+            <Classes />
+          </PrivetRoute>
+        ),
+        // details page .......
       },
       {
         path: "/course/:id",
-        element: <CourseDetails/>,
+        element: (
+          <PrivetRoute>
+            <CourseDetails />
+          </PrivetRoute>
+        ),
       },
       {
         path: "/event/:id",
-        element: <EventDetails/>,
+        element: (
+          <PrivetRoute>
+            <EventDetails />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "/assignments",
+        element: (
+          <PrivetRoute>
+            <Assignments />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "/profile",
+        element: (
+          <PrivetRoute>
+            <Profile />
+          </PrivetRoute>
+        ),
+      },
+      {
+        path: "/profile/edit/:id",
+        element: (
+          <PrivetRoute>
+            <EditProfile />
+          </PrivetRoute>
+
+        ),
       },
     ],
   },
   {
-    path:"/dashboard",
-    element:<Dashboard/>,
-    children:[
+    path: "/dashboard",
+    element: (
+      <AdminRoute>
+        <Dashboard />
+      </AdminRoute>
+    ),
+    children: [
       {
-        path:"manage-notice",
-        element:<ManageNotice/>
+        path: "manage-notice",
+        element: <ManageNotice />,
       },
       {
-        path:"manage-classes",
-        element:<ManageClasses/>
+        path: "manage-classes",
+        element: <ManageClasses />,
       },
       {
-        path:"manage-classes/edit/:id",
-        element:<EditClasses/>
+        path: "manage-classes/edit/:id",
+        element: <EditClasses />,
       },
       {
-        path:"manage-events",
-        element:<ManageEvents/>
+        path: "manage-events",
+        element: <ManageEvents />,
       },
       {
-        path:"manage-courses",
-        element:<ManageCourses/>
+        path: "manage-courses",
+        element: <ManageCourses />,
       },
-    ]
+      {
+        path: "manage-users",
+        element: <ManageUsers />,
+      },
+      {
+        path: "manage-gallery",
+        element: <ManageGallery />,
+      },
+      {
+        path: "manage-members",
+        element: <ManageMembers />,
+      },
+      {
+        path: "manage-assignments",
+        element: <ManageAssignments />,
+      },
+    ],
   },
   {
     path: "/login",

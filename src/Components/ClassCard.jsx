@@ -4,8 +4,10 @@ import { FaClock } from "react-icons/fa";
 import { IoPin } from "react-icons/io5";
 import { axiosSecure } from "../Apis/axios";
 import { Link } from "react-router";
+import useRole from "../Hooks/useRole";
 
 const ClassCard = ({ classData ,refetch}) => {
+  const {role}=useRole();
   console.log(classData);
   const handleCopyLink = () => {
     const link = classData?.link;
@@ -110,20 +112,22 @@ const ClassCard = ({ classData ,refetch}) => {
               </div>
             </div>
           </div>
-          <div className="flex gap-2 ms-4 pb-4">
-            <Link to={`edit/${classData?._id}`}>
-              <button className="text-white bg-blue-700 py-2 px-5 rounded">
-                Edit
+          {role === "admin" && (
+            <div className="flex gap-2 ms-4 pb-4">
+              <Link to={`edit/${classData?._id}`}>
+                <button className="text-white bg-blue-700 py-2 px-5 rounded">
+                  Edit
+                </button>
+              </Link>
+
+              <button
+                onClick={() => handleDelete(classData._id)}
+                className="text-white bg-red-700 py-2 px-5 rounded"
+              >
+                Delete
               </button>
-            </Link>
-           
-            <button
-              onClick={() => handleDelete(classData._id)}
-              className="text-white bg-red-700 py-2 px-5 rounded"
-            >
-              Delete
-            </button>
-          </div>
+            </div>
+          )}
         </div>
       </article>
     </section>

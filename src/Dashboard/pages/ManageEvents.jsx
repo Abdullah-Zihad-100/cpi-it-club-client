@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import EventCard from "../../Components/EventCard";
 import { axiosSecure } from "../../Apis/axios";
+import Title from "../../Components/Title";
+import Loader from "../../Components/Loader";
 
 export default function EventManagement() {
   const handleAddEvent = async (e) => {
@@ -44,7 +46,7 @@ export default function EventManagement() {
     }
   };
 
-  const { data: events = [], refetch } = useQuery({
+  const { data: events = [], isPending,refetch } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
       const res = await axiosSecure.get("/events");
@@ -71,7 +73,7 @@ export default function EventManagement() {
     <div className="p-6 space-y-8 max-w-6xl mx-auto">
       {/* Add Event Form */}
       <div className="bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
-        <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">
+        <h2 className="text-3xl font-semibold mb-6 text-center text-blue-600">
           Add New Event
         </h2>
         <form
@@ -148,13 +150,20 @@ export default function EventManagement() {
 
       {/* All Events List */}
       <div className="">
-        {events.map((event) => (
-          <EventCard
-            event={event}
-            handleDelete={() => handleDelete(event?._id)}
-            key={event._id}
-          />
-        ))}
+        {isPending ? (
+          <Loader />
+        ) : (
+          <div>
+            <Title heading={"All Events"} />
+            {events.map((event) => (
+              <EventCard
+                event={event}
+                handleDelete={() => handleDelete(event?._id)}
+                key={event._id}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
