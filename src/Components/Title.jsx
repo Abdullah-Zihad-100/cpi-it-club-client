@@ -1,6 +1,6 @@
 const Title = ({ heading, title }) => {
   return (
-    <div className="py-10">
+    <div className="py-5">
       <h2 className="text-blue-700 text-2xl sm:text-4xl font-semibold text-center mb-1">
         {heading}
       </h2>

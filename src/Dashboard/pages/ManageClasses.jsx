@@ -104,18 +104,24 @@ const ManageClasses = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             />
-            <input
-              type="text"
-              name="img"
-              placeholder="Enter class image URL"
-              className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
+
             <input
               type="text"
               name="link"
               placeholder="Enter online class link (optional)"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="file"
+              name="img"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
+              className="block w-full text-sm text-gray-500
+  file:mr-4 file:py-2 file:px-4
+  file:rounded-full file:border-0
+  file:text-sm file:font-semibold
+  file:bg-blue-50 file:text-blue-700
+  hover:file:bg-blue-100"
             />
 
             <div className="flex items-center space-x-2">
@@ -124,6 +130,7 @@ const ManageClasses = () => {
                 name="isPinned"
                 className="checkbox checkbox-primary"
               />
+
               <label htmlFor="isPinned" className="text-gray-700">
                 Pin this class
               </label>
@@ -141,7 +148,7 @@ const ManageClasses = () => {
 
       {/* Add New Class */}
       <div>
-        <Title heading={"All Classes"}/>
+        <Title heading={"All Classes"} />
         {classes.map((classData) => (
           <ClassCard
             key={classData?._id}

@@ -4,6 +4,7 @@ import { FaTrashAlt } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import { imgUplord } from "../../Apis/apis";
+import Title from "../../Components/Title";
 const ManageGallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -63,9 +64,7 @@ const ManageGallery = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-semibold text-center text-blue-700 mb-8">
-        Manage Gallery
-      </h2>
+     <Title heading={"Manage Gallery"}/>
 
       {/* Upload Section */}
       <div className="mb-10 flex flex-col sm:flex-row items-center justify-center gap-4">
