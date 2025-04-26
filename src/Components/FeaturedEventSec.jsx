@@ -17,9 +17,13 @@ const FeaturedEventSec = () => {
         heading="Featured Events"
         title="Check out our workshops and sessions"
       />
-      {eventData?.slice(0, 1).map((event) => (
-        <EventCard key={event?._id} event={event} />
-      ))}
+      {eventData.length < 0 ? (
+        <p className="sm:text-3xl text-xl text-center my-20">No Data Available....</p>
+      ) : (
+        eventData
+          ?.slice(0, 1)
+          .map((event) => <EventCard key={event?._id} event={event} />)
+      )}
     </div>
   );
 };

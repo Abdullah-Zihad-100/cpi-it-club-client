@@ -13,7 +13,7 @@ const Event = () => {
   });
 
   return (
-    <div className="mb-10">
+    <div className="pt-5">
       <div className="max-w-7xl mx-auto px-5">
         <div className="pt-20">
           <Title title={"Next Events In Our Club"} heading={"Our Events"} />

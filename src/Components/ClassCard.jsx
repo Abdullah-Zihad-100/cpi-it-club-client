@@ -5,10 +5,16 @@ import { IoPin } from "react-icons/io5";
 import { axiosSecure } from "../Apis/axios";
 import { Link } from "react-router";
 import useRole from "../Hooks/useRole";
+import { useState } from "react";
+import ConfirmModal from "./ConfirmModal"; // import the modal component
 
-const ClassCard = ({ classData ,refetch}) => {
-  const {role}=useRole();
+const ClassCard = ({ classData, refetch }) => {
+  const { role } = useRole();
+  const [isModalOpen, setIsModalOpen] = useState(false); // Modal state
+  const [classIdToDelete, setClassIdToDelete] = useState(null); // Store class ID to delete
+
   console.log(classData);
+
   const handleCopyLink = () => {
     const link = classData?.link;
     navigator.clipboard
@@ -17,24 +23,28 @@ const ClassCard = ({ classData ,refetch}) => {
       .catch((error) => console.error("Failed To Copy", error));
   };
 
+  const handleDelete = async () => {
+    if (!classIdToDelete) return;
+    try {
+      await axiosSecure.delete(`/classes/${classIdToDelete}`);
+      toast.success("Class deleted successfully");
+      refetch();
+      setIsModalOpen(false); // Close the modal after deleting
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast.error("Failed to delete class");
+    }
+  };
 
-    const handleDelete = async (id) => {
-      const confirm = window.confirm(
-        "Are you sure you want to delete this class?"
-      );
-      if (!confirm) return;
+  const openDeleteModal = (id) => {
+    setClassIdToDelete(id);
+    setIsModalOpen(true); // Open the modal when delete is clicked
+  };
 
-      try {
-        await axiosSecure.delete(`/classes/${id}`);
-        toast.success("Class deleted successfully");
-        refetch();
-      } catch (error) {
-        console.error("Delete failed:", error);
-        toast.error("Failed to delete class");
-      }
-    };
+  const closeDeleteModal = () => {
+    setIsModalOpen(false); // Close the modal without deleting
+  };
 
-  
   return (
     <section className="mx-auto antialiased w-full relative my-10 z-1">
       {classData?.isPin && (
@@ -49,7 +59,8 @@ const ClassCard = ({ classData ,refetch}) => {
         {/* Image Section */}
         <img
           className="w-full max-h-[400px] object-cover md:w-52 md:rounded-l-xl"
-          src={classData?.img}
+          src={classData?.img || "/default-image.jpg"} // fallback image if none
+          alt="Class Image"
         />
         {/* Content Section */}
         <div className="flex-1">
@@ -121,7 +132,7 @@ const ClassCard = ({ classData ,refetch}) => {
               </Link>
 
               <button
-                onClick={() => handleDelete(classData._id)}
+                onClick={() => openDeleteModal(classData._id)} // Open the delete confirmation modal
                 className="text-white bg-red-700 py-2 px-5 rounded"
               >
                 Delete
@@ -130,6 +141,14 @@ const ClassCard = ({ classData ,refetch}) => {
           )}
         </div>
       </article>
+
+      {/* Confirmation Modal */}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        onClose={closeDeleteModal}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this class?"
+      />
     </section>
   );
 };

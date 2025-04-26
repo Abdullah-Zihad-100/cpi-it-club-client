@@ -5,9 +5,13 @@ import Title from "../../Components/Title";
 import Loader from "../../Components/Loader";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
+import ConfirmModal from "../../Components/ConfirmModal"; // ✅ import modal
 
 const ManageUsers = () => {
   const [searchEmail, setSearchEmail] = useState("");
+  const [showModal, setShowModal] = useState(false); // ✅ modal toggle
+  const [selectedUserEmail, setSelectedUserEmail] = useState(""); // ✅ which email to delete
+
   const {
     data: users = [],
     isLoading,
@@ -20,14 +24,9 @@ const ManageUsers = () => {
     },
   });
 
-  const handleDelete = async (email) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this user?"
-    );
-    if (!confirm) return;
-
+  const handleDelete = async () => {
     try {
-      await axiosSecure.delete(`/users/${email}`);
+      await axiosSecure.delete(`/users/${selectedUserEmail}`);
       toast.success("User deleted successfully");
       refetch();
     } catch (error) {
@@ -37,8 +36,7 @@ const ManageUsers = () => {
 
   const handleRoleChange = async (email, role) => {
     try {
-      const res = await axiosSecure.put(`/users/role/${email}`, { role });
-      console.log("role change",res);
+      await axiosSecure.put(`/users/role/${email}`, { role });
       toast.success(`User updated to ${role}`);
       refetch();
     } catch (error) {
@@ -113,7 +111,10 @@ const ManageUsers = () => {
                         Make User
                       </button>
                       <button
-                        onClick={() => handleDelete(user?.email)}
+                        onClick={() => {
+                          setSelectedUserEmail(user.email);
+                          setShowModal(true);
+                        }}
                         className="text-red-500 cursor-pointer px-2 py-1 hover:text-red-700 transition-all duration-200"
                         title="Delete User"
                       >
@@ -133,6 +134,15 @@ const ManageUsers = () => {
           </div>
         </div>
       )}
+
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={() => {
+          handleDelete();
+          setShowModal(false);
+        }}
+      />
     </div>
   );
 };

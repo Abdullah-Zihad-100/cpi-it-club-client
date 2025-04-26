@@ -4,49 +4,20 @@ import EventCard from "../../Components/EventCard";
 import { axiosSecure } from "../../Apis/axios";
 import Title from "../../Components/Title";
 import Loader from "../../Components/Loader";
+import ImageUploadInput from "../../Components/ImageUploadInput";
+import { useState } from "react";
+import { imgUplord } from "../../Apis/apis";
+import ConfirmModal from "../../Components/ConfirmModal"; // Import the modal
 
 export default function EventManagement() {
-  const handleAddEvent = async (e) => {
-    e.preventDefault();
-    const form = e.target;
+  const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const rawDate = form.eventDate.value;
-    const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    const newEvent = {
-      title: form.eventTitle.value,
-      club: "IT CLUB",
-      description: form.description.value,
-      location: form.location.value,
-      date: formattedDate,
-      price: {
-        original: form.participationFee.value,
-      },
-      prizes: {
-        first: form.firstPrize.value,
-        second: form.secondPrize.value,
-        third: form.thirdPrize.value,
-      },
-      image: form.image.value,
-    };
-    try {
-      const res = await axiosSecure.post("/events", newEvent);
-      if (res.data.insertedId) {
-        toast.success("Event added successfully");
-        // form.reset();
-        refetch();
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to add event");
-    }
-  };
-
-  const { data: events = [], isPending,refetch } = useQuery({
+  const {
+    data: events = [],
+    isPending,
+    refetch,
+  } = useQuery({
     queryKey: ["events"],
     queryFn: async () => {
       const res = await axiosSecure.get("/events");
@@ -54,9 +25,62 @@ export default function EventManagement() {
     },
   });
 
-  const handleDelete = async (id) => {
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal state
+  const [eventToDelete, setEventToDelete] = useState(null); // Store event ID to delete
+
+  const handleAddEvent = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    const form = e.target;
+
     try {
-      const res = await axiosSecure.delete(`/events/${id}`);
+      let imageUrl = "";
+      if (imageFile) {
+        imageUrl = await imgUplord(imageFile);
+      }
+
+      const rawDate = form.eventDate.value;
+      const formattedDate = new Date(rawDate).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+
+      const newEvent = {
+        title: form.eventTitle.value,
+        club: "IT CLUB",
+        description: form.description.value,
+        location: form.location.value,
+        date: formattedDate,
+        price: {
+          original: form.participationFee.value,
+        },
+        prizes: {
+          first: form.firstPrize.value,
+          second: form.secondPrize.value,
+          third: form.thirdPrize.value,
+        },
+        image: imageUrl,
+      };
+
+      const res = await axiosSecure.post("/events", newEvent);
+      if (res.data.insertedId) {
+        toast.success("Event added successfully");
+        form.reset();
+        setImageFile(null);
+        refetch();
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add event");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const res = await axiosSecure.delete(`/events/${eventToDelete}`);
       if (res.data.deletedId) {
         toast.success(`Event with ID: ${res.data.deletedId} deleted`);
         refetch();
@@ -66,6 +90,8 @@ export default function EventManagement() {
     } catch (error) {
       console.error(error);
       toast.error("Failed to delete event");
+    } finally {
+      setShowDeleteModal(false);
     }
   };
 
@@ -83,73 +109,86 @@ export default function EventManagement() {
           <input
             name="eventTitle"
             placeholder="Event Title"
+            disabled={isSubmitting}
             className="col-span-2 border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
           <textarea
             name="description"
             placeholder="Event Description"
+            disabled={isSubmitting}
             className="col-span-2 border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           ></textarea>
           <input
             type="date"
             name="eventDate"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
           <input
             type="time"
             name="eventTime"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             required
           />
           <input
             name="location"
             placeholder="Location"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             name="organizer"
             placeholder="Organizer Name"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
-          <input
-            name="image"
-            placeholder="Event Image URL"
-            className="col-span-2 border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-          />
+
           <input
             name="participationFee"
             placeholder="Participation Fee"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             name="firstPrize"
             placeholder="1st Prize"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             name="secondPrize"
             placeholder="2nd Prize"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
           <input
             name="thirdPrize"
             placeholder="3rd Prize"
+            disabled={isSubmitting}
             className="border border-gray-300 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
+          <ImageUploadInput
+            name="img"
+            disabled={isSubmitting}
+            onChange={(e) => setImageFile(e.target.files[0])}
+          />
+
           <button
             type="submit"
-            className="col-span-2 bg-blue-600 text-white py-2 rounded-xl hover:bg-blue-700 transition"
+            disabled={isSubmitting}
+            className="col-span-2 bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
           >
-            Add Event
+            {isSubmitting ? "Adding..." : "Add Event"}
           </button>
         </form>
       </div>
 
       {/* All Events List */}
-      <div className="">
+      <div>
         {isPending ? (
           <Loader />
         ) : (
@@ -158,13 +197,24 @@ export default function EventManagement() {
             {events.map((event) => (
               <EventCard
                 event={event}
-                handleDelete={() => handleDelete(event?._id)}
+                handleDelete={() => {
+                  setEventToDelete(event?._id);
+                  setShowDeleteModal(true); // Open modal
+                }}
                 key={event._id}
               />
             ))}
           </div>
         )}
       </div>
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this event?"
+      />
     </div>
   );
 }

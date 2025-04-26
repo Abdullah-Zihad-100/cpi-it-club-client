@@ -12,7 +12,7 @@ const Banner = () => {
               <h3 className="md:text-5xl text-2xl font-primary font-[500]">
                 CPI
               </h3>
-              <h2 className="text-5xl font-bold md:text-9xl">IT CLUB</h2>
+              <h2 className="sm:text-7xl text-5xl font-bold lg:text-9xl">IT CLUB</h2>
               <p className="text-xl md:text-2xl">
                 <TypingAnimatedText/>
               </p>

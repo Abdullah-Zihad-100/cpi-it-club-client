@@ -17,7 +17,7 @@ export default function Classes() {
   });
 
   return (
-    <div className="mb-10">
+    <div className="pt-5">
       <div className="max-w-7xl mx-auto px-5">
         <div className="pt-20">
           <Title title={"Next Class Date"} heading={"Our Classes"} />

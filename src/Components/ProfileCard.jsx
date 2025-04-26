@@ -3,7 +3,7 @@ import React from "react";
 const ProfileCard = ({teamMember}) => {
   console.log(teamMember);
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300 hover:shadow-blue-500/50 dark:hover:shadow-blue-900/50 mb-16">
+    <div className="bg-white rounded-xl shadow-2xl max-w-sm w-full overflow-hidden transition-all duration-300 hover:shadow-blue-500/50 dark:hover:shadow-blue-900/50 mb-16 h-[450px]">
       <div className="relative h-32 bg-gradient-to-r from-blue-600 to-blue-700">
         <img
           src={teamMember?.profile}
@@ -17,17 +17,13 @@ const ProfileCard = ({teamMember}) => {
           {teamMember?.post}
         </p>
         <p className="text-gray-600 dark:text-gray-600 mb-4">
-          Passionate about creating user-friendly web applications and solving
-          complex problems.
+       {teamMember?.description.slice(0,120)}...
         </p>
         <div className="flex justify-center space-x-4 mb-6">
           {/* Email Icon */}
-          <a
-            href="mailto:example@example.com" // Replace with the actual email
-            className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
-          >
+          <div className="relative group flex items-center justify-center">
             <svg
-              className="w-6 h-6"
+              className="w-6 h-6 text-gray-600 dark:text-gray-500 group-hover:text-blue-800 dark:group-hover:text-blue-400 transition-colors duration-300 cursor-pointer"
               fill="currentColor"
               viewBox="0 0 24 24"
               aria-hidden="true"
@@ -38,11 +34,16 @@ const ProfileCard = ({teamMember}) => {
                 clipRule="evenodd"
               ></path>
             </svg>
-          </a>
+
+            {/* Tooltip */}
+            <div className="absolute -top-8 bg-gray-800 text-white text-sm px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
+              {teamMember?.email || "Not Provide"}
+            </div>
+          </div>
 
           {/* Facebook Icon */}
           <a
-            href="https://www.facebook.com/example" // Replace with the actual Facebook link
+            href={teamMember?.fbLink} // Replace with the actual Facebook link
             className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
           >
             <svg
@@ -61,7 +62,7 @@ const ProfileCard = ({teamMember}) => {
 
           {/* LinkedIn Icon */}
           <a
-            href="https://www.linkedin.com/in/example" // Replace with the actual LinkedIn link
+            href={teamMember?.linkedinLink} // Replace with the actual LinkedIn link
             className="text-gray-600 hover:text-blue-800 dark:text-gray-500 dark:hover:text-blue-400 transition-colors duration-300"
           >
             <svg

@@ -8,8 +8,9 @@ import toast from "react-hot-toast";
 import { getToken } from "../Apis/apis";
 
 const Login = () => {
-  const { loginUser } = useAuth();
+  const { loginUser, resetPassword } = useAuth(); // include resetPassword
   const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [resetEmail, setResetEmail] = useState(""); // for password reset
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
@@ -20,18 +21,34 @@ const Login = () => {
 
     const email = e.target.email.value;
     const password = e.target.password.value;
+    setResetEmail(email); // set email for reset use
 
     try {
-      const res= await getToken(email);
-      console.log("Token------>",res);
+      const res = await getToken(email);
+      console.log("Token------>", res);
       const result = await loginUser(email, password);
       console.log("Login successful:", result);
       navigate(from, { replace: true });
     } catch (error) {
-      toast.error("Login Failed")
+      toast.error("Login Failed");
       console.error("Login error:", error.message);
     } finally {
       setIsLoggingIn(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetEmail) {
+      toast.error("Please enter your email above first.");
+      return;
+    }
+
+    try {
+      await resetPassword(resetEmail);
+      toast.success("Password reset email sent!");
+    } catch (error) {
+      console.error("Password reset error:", error.message);
+      toast.error("Failed to send reset email.");
     }
   };
 
@@ -42,10 +59,8 @@ const Login = () => {
         backgroundImage: `url(${bgImg})`,
       }}
     >
-      {/* Overlay tint */}
       <div className="absolute inset-0 bg-blue-900/40 backdrop-blur-sm z-0"></div>
 
-      {/* Glassmorphic Card */}
       <div className="relative z-10 w-full max-w-md mx-auto bg-white/10 border border-white/30 backdrop-blur-2xl rounded-2xl p-8 shadow-2xl text-white">
         <div className="flex justify-center mb-4">
           <Lottie animationData={robot} className="w-36 h-36" loop />
@@ -61,6 +76,7 @@ const Login = () => {
             name="email"
             required
             placeholder="Email"
+            onChange={(e) => setResetEmail(e.target.value)}
             className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
             disabled={isLoggingIn}
           />
@@ -72,7 +88,10 @@ const Login = () => {
             className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
             disabled={isLoggingIn}
           />
-          <div className="text-sm text-right text-white/80 hover:underline cursor-pointer">
+          <div
+            className="text-sm text-right text-white/80 hover:underline cursor-pointer"
+            onClick={handleResetPassword}
+          >
             Forgot password?
           </div>
 

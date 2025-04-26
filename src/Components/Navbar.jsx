@@ -63,6 +63,15 @@ console.log("User role------>",role);
       >
         About Us
       </NavLink>
+      <NavLink
+        to="/contact"
+        onClick={() => setIsToggle(false)}
+        className={({ isActive }) =>
+          isActive ? "border-b-2 font-semibold" : "hover:text-blue-500"
+        }
+      >
+        Contact
+      </NavLink>
 
       {/* Info Dropdown (Only shows on desktop) */}
       <div className="relative sm:block hidden">
@@ -144,7 +153,7 @@ console.log("User role------>",role);
         <div
           className={`space-x-7 text-lg font-[400] ${
             isScrolled ? "text-gray-800" : "text-white"
-          } sm:flex hidden items-center`}
+          } md:flex hidden items-center`}
         >
           {Links}
 
@@ -202,7 +211,7 @@ console.log("User role------>",role);
         </div>
 
         {/* Mobile Toggle Button */}
-        <div className="sm:hidden block">
+        <div className="md:hidden block">
           {!isToggle ? (
             <IoMdMenu
               className="cursor-pointer"
@@ -224,7 +233,7 @@ console.log("User role------>",role);
       {/* Mobile Menu */}
       {isToggle && (
         <div
-          className={`sm:hidden ${
+          className={`md:hidden ${
             !isScrolled ? "bg-white/60" : "bg-white shadow-2xl"
           } w-full p-5 space-y-3 flex flex-col rounded-sm text-gray-800 text-lg`}
         >

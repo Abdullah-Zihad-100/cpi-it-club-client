@@ -19,22 +19,28 @@ export default function Gallery() {
   return (
     <div className="overflow-hidden px-5">
       <Title heading="Gallery" title="Our Gallery Images (CPI IT CLUB)" />
-      <Swiper
-        effect={"cards"}
-        grabCursor={true}
-        modules={[EffectCards]}
-        className="mySwiper mySwiper w-full max-w-[900px] mx-auto overflow-x-hidden"
-      >
-        {imgs?.map((img) => (
-          <SwiperSlide key={img?._id}>
-            <img
-              className="w-full h-64 sm:h-[500px] object-cover overflow-hidden "
-              src={img?.imgUrl}
-              alt=""
-            />
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {imgs?.length < 0 ? (
+        <p className="sm:text-3xl text-xl text-center my-20">
+          No Data Available....
+        </p>
+      ) : (
+        <Swiper
+          effect={"cards"}
+          grabCursor={true}
+          modules={[EffectCards]}
+          className="mySwiper mySwiper w-full max-w-[900px] mx-auto overflow-x-hidden"
+        >
+          {imgs?.map((img) => (
+            <SwiperSlide key={img?._id}>
+              <img
+                className="w-full h-64 sm:h-[500px] object-cover overflow-hidden "
+                src={img?.imgUrl}
+                alt=""
+              />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      )}
     </div>
   );
 }

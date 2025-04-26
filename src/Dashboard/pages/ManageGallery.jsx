@@ -5,10 +5,12 @@ import toast from "react-hot-toast";
 import { useState } from "react";
 import { imgUplord } from "../../Apis/apis";
 import Title from "../../Components/Title";
+import ConfirmModal from "../../Components/ConfirmModal";
 const ManageGallery = () => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
-
+  const [showModal, setShowModal] = useState(false);
+  const [deleteImageId, setDeleteImageId] = useState(null);
   const {
     data: images = [],
     isLoading,
@@ -21,22 +23,18 @@ const ManageGallery = () => {
     },
   });
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this image?"
-    );
-    if (!confirm) return;
+const handleDelete = async () => {
+  try {
+    await axiosSecure.delete(`/gallery/${deleteImageId}`);
+    toast.success("Image Successfully Deleted");
+    refetch();
+  } catch (error) {
+    console.error("Failed to delete image:", error);
+  } finally {
+    setShowModal(false);
+  }
+};
 
-    try {
-      const res = await axiosSecure.delete(`/gallery/${id}`);
-      if (res.data.deletedCount > 0) {
-        refetch();
-        toast.success("Image Successfully Deleted");
-      }
-    } catch (error) {
-      console.error("Failed to delete image:", error);
-    }
-  };
 
   const handleImageUpload = async () => {
     if (!selectedImage) {
@@ -51,8 +49,8 @@ const ManageGallery = () => {
 
       if (res.data.insertedId) {
         toast.success("Image successfully added!");
-        setSelectedImage(null);
         refetch();
+        setSelectedImage(null);
       }
     } catch (error) {
       console.error("Upload error:", error);
@@ -64,7 +62,7 @@ const ManageGallery = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-     <Title heading={"Manage Gallery"}/>
+      <Title heading={"Manage Gallery"} />
 
       {/* Upload Section */}
       <div className="mb-10 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -103,7 +101,10 @@ const ManageGallery = () => {
               className="w-full h-64 object-cover"
             />
             <button
-              onClick={() => handleDelete(img._id)}
+              onClick={() => {
+                setDeleteImageId(img._id);
+                setShowModal(true);
+              }}
               className="absolute top-3 right-3 bg-red-600 text-white p-2 rounded-full shadow hover:bg-red-700 cursor-pointer"
             >
               <FaTrashAlt />
@@ -111,6 +112,12 @@ const ManageGallery = () => {
           </div>
         ))}
       </div>
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+        message="Are you sure you want to delete this image?"
+      />
     </div>
   );
 };

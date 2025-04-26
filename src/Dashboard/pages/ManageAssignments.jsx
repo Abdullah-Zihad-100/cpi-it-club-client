@@ -5,14 +5,16 @@ import {
   deleteAssignment,
   getAllAssignments,
   updateAssignmentMark,
-  
 } from "../../Apis/apis";
 import Title from "../../Components/Title";
 import Loader from "../../Components/Loader";
+import ConfirmModal from "../../Components/ConfirmModal"; // Importing your ConfirmModal
 
 const ManageAssignments = () => {
   const [activeMarkInput, setActiveMarkInput] = useState(null);
   const [newMark, setNewMark] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal state
+  const [assignmentToDelete, setAssignmentToDelete] = useState(null); // Assignment ID to delete
 
   const {
     data: assignments = [],
@@ -23,19 +25,20 @@ const ManageAssignments = () => {
     queryFn: getAllAssignments,
   });
 
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure you want to delete this?");
-    if (!confirm) return;
+  const handleDelete = async () => {
+    if (!assignmentToDelete) return;
 
     try {
-      const res = await deleteAssignment(id);
+      const res = await deleteAssignment(assignmentToDelete);
       if (res.deletedCount > 0) {
         toast.success("Assignment deleted successfully!");
+        setShowDeleteModal(false); // Close the modal after deletion
         refetch();
       }
     } catch (err) {
       console.error(err);
       toast.error("Failed to delete assignment.");
+      setShowDeleteModal(false); // Close modal on error as well
     }
   };
 
@@ -106,7 +109,6 @@ const ManageAssignments = () => {
                 <p className="text-xs text-gray-500">
                   Submitted Date:{" "}
                   <span className="italic">
-                    {" "}
                     {new Date(assignment.submittedAt).toLocaleDateString()} at{" "}
                     {new Date(assignment.submittedAt).toLocaleTimeString()}
                   </span>
@@ -143,9 +145,13 @@ const ManageAssignments = () => {
                   </button>
                 )}
 
+                {/* Delete Button */}
                 <button
-                  onClick={() => handleDelete(assignment._id)}
-                  className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md w-full text-sm font-medium transition"
+                  onClick={() => {
+                    setAssignmentToDelete(assignment._id); // Set the assignment to delete
+                    setShowDeleteModal(true); // Show the modal
+                  }}
+                  className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md w-full text-sm font-medium transition cursor-pointer"
                 >
                   Delete Assignment
                 </button>
@@ -154,6 +160,13 @@ const ManageAssignments = () => {
           ))}
         </div>
       )}
+
+      {/* Modal for delete confirmation */}
+      <ConfirmModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };

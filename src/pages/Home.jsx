@@ -2,6 +2,7 @@ import Banner from "../Components/Banner";
 import CouseSection from "../Components/CouseSection";
 import FeaturedEventSec from "../Components/FeaturedEventSec";
 import Footer from "../Components/Footer";
+import FunSection from "../Components/FunSection";
 import Gallery from "../Components/Gallery";
 import Notice from "../Components/Notice";
 import Section1 from "../Components/Section1";
@@ -16,8 +17,9 @@ const Home = () => {
       <Gallery />
       <FeaturedEventSec />
       <CouseSection />
+      <FunSection />
+
       <Team />
-      <Footer />
     </div>
   );
 };

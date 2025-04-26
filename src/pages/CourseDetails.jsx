@@ -71,10 +71,6 @@ const CourseDetails = () => {
                 {course.mode}
               </div>
             </div>
-
-            <button className="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded-full transition duration-300">
-              Enroll Now
-            </button>
           </div>
         </div>
       )}

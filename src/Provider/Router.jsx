@@ -24,11 +24,15 @@ import ManageMembers from "../Dashboard/pages/ManageMembers";
 import EditProfile from "../pages/EditProfile";
 import Assignments from "../pages/Assignments";
 import ManageAssignments from "../Dashboard/pages/ManageAssignments";
+import Contact from "../pages/Contact";
+import GameSec from "../Components/GameSec";
+import ErrorPage from "../pages/ErrorPage";
 
 export const Router = createBrowserRouter([
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: "/",
@@ -39,8 +43,16 @@ export const Router = createBrowserRouter([
         element: <About />,
       },
       {
+        path: "/play-game",
+        element: <GameSec />,
+      },
+      {
         path: "/event",
         element: <Event />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
       },
       {
         path: "/members",
@@ -93,7 +105,6 @@ export const Router = createBrowserRouter([
           <PrivetRoute>
             <EditProfile />
           </PrivetRoute>
-
         ),
       },
     ],

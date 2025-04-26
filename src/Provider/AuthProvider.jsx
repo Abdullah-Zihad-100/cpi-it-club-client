@@ -4,6 +4,7 @@ import { auth } from "../firebase/firebase";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -33,6 +34,11 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  const resetPassword = (email) => {
+    setLoading(false);
+    return sendPasswordResetEmail(auth, email);
+  };
+
   const createUser = (email, password, name) => {
     setLoading(false);
     console.log(name);
@@ -47,7 +53,7 @@ const AuthProvider = ({ children }) => {
   const logOut = async () => {
     setLoading(false);
     const res = await removeToken();
-    console.log("Delete Token-------->",res);
+    console.log("Delete Token-------->", res);
     return signOut(auth);
   };
 
@@ -57,6 +63,7 @@ const AuthProvider = ({ children }) => {
     updateUserProfile,
     logOut,
     user,
+    resetPassword,
     loading,
   };
   return (

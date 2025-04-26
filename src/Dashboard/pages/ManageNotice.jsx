@@ -3,6 +3,8 @@ import { axiosSecure } from "../../Apis/axios";
 import { IoMdCloseCircle } from "react-icons/io";
 import { addNotice } from "../../Apis/apis";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import ConfirmModal from "../../Components/ConfirmModal";
 
 const ManageNotice = () => {
   const { data: notices = [], refetch } = useQuery({
@@ -12,6 +14,9 @@ const ManageNotice = () => {
       return res.data;
     },
   });
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,15 +40,23 @@ const ManageNotice = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleDelete = async () => {
     try {
-      await axiosSecure.delete(`/notice/${id}`);
+      await axiosSecure.delete(`/notice/${selectedId}`);
       toast.success("Notice deleted!");
       refetch();
     } catch (err) {
       console.error("Delete error:", err);
       toast.error(" Failed to delete notice");
+    } finally {
+      setShowModal(false);
+      setSelectedId(null);
     }
+  };
+
+  const openModal = (id) => {
+    setSelectedId(id);
+    setShowModal(true);
   };
 
   return (
@@ -99,7 +112,7 @@ const ManageNotice = () => {
                         </span>
                       </div>
                       <button
-                        onClick={() => handleDelete(notice._id)}
+                        onClick={() => openModal(notice._id)}
                         className="text-red-500 cursor-pointer"
                       >
                         <IoMdCloseCircle size={24} />
@@ -112,6 +125,12 @@ const ManageNotice = () => {
           </div>
         </section>
       </div>
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+        
+      />
     </div>
   );
 };

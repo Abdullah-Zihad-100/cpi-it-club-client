@@ -15,18 +15,17 @@ const About = () => {
             <p className="text-gray-700 text-[18px]">
               {" "}
               <span className="text-blue-700">CPI IT CLUB </span>is one of the
-              student-run clubs at Prime College. It is run by a group of
-              creative and tech-savvy students. With our goal in mind, we
-              organize a series of sessions, seminars, training programs and
-              competitions. Since our founding in 2004, we have been and still
-              are looking for opportunities to help students in any way possible
-              and all we have set out is to strive to guide students in the
-              right direction.
+              student-run clubs at CPI College. It is run by a group of creative
+              and tech-savvy students. With our goal in mind, we organize a
+              series of sessions, seminars, training programs and competitions.
+              Since our founding in 2004, we have been and still are looking for
+              opportunities to help students in any way possible and all we have
+              set out is to strive to guide students in the right direction.
             </p>
           </div>
           <div className="flex-1">
             <img
-              src="https://media.istockphoto.com/id/1350474131/photo/business-team-portrait.jpg?s=612x612&w=0&k=20&c=_rwVn8lkmzXc-_Q5tSyH-Jt0tt_acwxvXVYCckg8v0M="
+              src="https://i.ibb.co.com/9mx2pC5z/482010626-122108626790770054-7155150234283418046-n.jpg"
               className="object-cover h-[450px] rounded-lg w-[600px]"
               alt=""
             />
@@ -50,7 +49,7 @@ const About = () => {
           </div>
           <div className="flex-1">
             <img
-              src="https://media.istockphoto.com/id/1350474131/photo/business-team-portrait.jpg?s=612x612&w=0&k=20&c=_rwVn8lkmzXc-_Q5tSyH-Jt0tt_acwxvXVYCckg8v0M="
+              src="https://i.ibb.co.com/0RXYQ12k/482016561-122108626724770054-4079713465887516837-n.jpg"
               className="object-cover h-[450px] rounded-lg w-[600px]"
               alt=""
             />

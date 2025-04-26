@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useAuth from "../Hooks/useAuth";
 import toast from "react-hot-toast";
 import { Link } from "react-router";
@@ -21,6 +21,9 @@ import Loader from "../Components/Loader";
 
 const Profile = () => {
   const { user } = useAuth();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+
 
   const { data: dbUser = {}, isLoading } = useQuery({
     queryKey: ["userProfile", user?.email],
@@ -41,35 +44,30 @@ const Profile = () => {
 
   // delete user --->
 
-  const handleDelete = async () => {
-    const email = user.email;
-    const password = prompt("Please enter your password to confirm deletion:");
+const handleDelete = async () => {
+  if (!passwordInput) {
+    toast.error("Password is required.");
+    return;
+  }
 
-    if (!password) {
-      toast.error("Password is required.");
-      return;
-    }
+  try {
+    const auth = getAuth();
+    const userCredential = EmailAuthProvider.credential(
+      user.email,
+      passwordInput
+    );
+    await reauthenticateWithCredential(auth.currentUser, userCredential);
 
-    try {
-      // Re-authenticate the user
-      const auth = getAuth();
-      const userCredential = EmailAuthProvider.credential(email, password);
-      await reauthenticateWithCredential(auth.currentUser, userCredential);
-      console.log("✅ Firebase user re-authenticated");
-      // Now delete user from Firebase Auth
-      await firebaseDeleteUser(auth.currentUser);
+    await firebaseDeleteUser(auth.currentUser);
+    await deleteUser(user?.email);
 
-      console.log("✅ Firebase user deleted");
-
-      // Now delete user from your own database
-      const res = await deleteUser(user?.email);
-      toast.success("User Profile Deleted Successfully");
-      console.log(res);
-    } catch (err) {
-      console.error("Error: ", err);
-      toast.error("Error deleting profile enter correct password");
-    }
-  };
+    toast.success("User Profile Deleted Successfully");
+    setIsModalOpen(false); // close modal after deletion
+  } catch (err) {
+    console.error("Error: ", err);
+    toast.error("Error deleting profile. Please enter correct password.");
+  }
+};
 
   return (
     <div
@@ -145,7 +143,7 @@ const Profile = () => {
                 </button>
               </Link>
               <button
-                onClick={handleDelete}
+                onClick={() => setIsModalOpen(true)}
                 className="flex items-center gap-2 px-4 py-2 bg-red-500/80 border border-red-400 text-white rounded-md hover:bg-red-600 transition cursor-pointer"
               >
                 <FaTrash /> Delete Profile
@@ -154,6 +152,39 @@ const Profile = () => {
           </div>
         </div>
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center">
+          <div className="bg-white rounded-lg p-6 w-full max-w-sm shadow-xl">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">
+              Confirm Deletion
+            </h2>
+            <p className="text-sm text-gray-600 mb-3">
+              Enter your password to confirm:
+            </p>
+            <input
+              type="password"
+              className="w-full p-2 border rounded-md mb-4 focus:outline-none focus:ring focus:border-blue-300"
+              value={passwordInput}
+              onChange={(e) => setPasswordInput(e.target.value)}
+              placeholder="Enter password"
+            />
+            <div className="flex justify-end gap-3">
+              <button
+                className="px-4 py-1 text-sm bg-gray-300 rounded hover:bg-gray-400"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-1 text-sm bg-red-500 text-white rounded hover:bg-red-600"
+                onClick={handleDelete}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

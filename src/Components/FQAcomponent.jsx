@@ -7,25 +7,26 @@ const data = {
     {
       title: "What does CPI IT CLUB do?",
       content:
-        "Prime IT Club is a student-run club working towards the goal of bridging the gap between academia and industry. Provide students with a thorough knowledge of the prospect of IT jobs in Nepal",
+        "CPI IT Club is a student-led organization at Compact Polytechnic Institute that empowers students through technology. The club organizes various events, training programs, workshops, and competitions to enhance practical IT skills like web development, graphic design, app development, and more. It also plays a vital role in maintaining the institute's digital presence and managing technical activities.",
     },
     {
-      title: "How can I join the CPI IT CLUB",
+      title: "How can I join the CPI IT CLUB?",
       content:
-        "New general members will be recruited annually, once the club orientation has been officially organized. All the candidates for general membership should be interviewed and distributed among the internal departments after the selection.",
+        "Students of Compact Polytechnic can join the CPI IT Club by filling out the membership form when recruitment is open. Recruitment usually happens during the start of a new session or after club orientation programs. Interested students are evaluated based on their interest and basic IT knowledge before becoming a member.",
     },
     {
       title: "How can I become an Executive member?",
       content:
-        "All of the general members who have more than 1 year of experience in the club are eligible to apply for executive membership.",
+        "To become an Executive Member, a student must first be an active general member of the CPI IT Club. Executive members are selected based on their dedication, skill contribution, and involvement in club activities. Typically, selection is done by the club advisor and current executive team through interviews or evaluations.",
     },
     {
-      title: "How many departments are there in the clubs?",
+      title: "How many departments are there in the CPI IT CLUB?",
       content:
-        "There are 5 departments in the clubs. Marketing, Human Resources, Event Management, Finance and Account, and Public Relation.",
+        "CPI IT Club consists of multiple departments including Web & App Development, Graphics & UI Design, Event Management, Public Relations, and Content & Documentation. Each department has specific responsibilities and contributes to the overall functioning of the club.",
     },
   ],
 };
+
 
 const FAQComponent = () => {
   return (

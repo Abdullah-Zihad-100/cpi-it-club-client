@@ -8,12 +8,14 @@ import toast from "react-hot-toast";
 
 const Register = () => {
   const { createUser, updateUserProfile } = useAuth();
-  const [isChecked, setIsChecked] = useState(false); // State for checkbox
-  const [isRegistering, setIsRegistering] = useState(false); // State for registration process
+  const [isChecked, setIsChecked] = useState(false);
+  const [isRegistering, setIsRegistering] = useState(false);
+  const [role, setRole] = useState("user");
   const navigate = useNavigate();
   const location = useLocation();
   const from = location?.state?.from?.pathname || "/";
   const [photoPreview, setPhotoPreview] = useState(null);
+
   const handlePhotoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -31,50 +33,48 @@ const Register = () => {
       return;
     }
 
-    setIsRegistering(true);
-
     const form = e.target;
     const name = form.name.value;
     const email = form.email.value;
     const password = form.password.value;
     const phone = form.phone.value;
-    const semester = form.semester.value;
-    const department = form.department.value;
-    const roll = form.roll.value;
+    const semester = form.semester?.value || null;
+    const department = form.department?.value || null;
+    const roll = form.roll?.value || null;
     const photo = form.photo.files[0];
 
+    const passwordRegex = /^(?=.*[A-Z]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must be at least 6 characters and contain a capital letter."
+      );
+      return;
+    }
+
+    setIsRegistering(true);
+
     try {
-      // 1. Upload Image First
-      // const photoUrl = await imgUplord(photo);
       let photoUrl =
         "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png";
       if (photo) {
-        // Only upload if user selected a photo
         photoUrl = await imgUplord(photo);
       }
 
-      // 2. Construct user data
       const newUser = {
         email,
         name,
-        roll,
-        semester,
-        department,
         phone,
         photoUrl,
+        role,
+        ...(role === "user" && { roll, semester, department }),
       };
 
-      const res = await getToken(email);
-      console.log("Register Token", res);
-      // 3. Save user to your own DB
-      const userData = await saveUser(newUser);
-      console.log("Saved to DB:", userData);
-      // 4. Create user in Firebase
-      const result = await createUser(email, password);
-      console.log("Firebase User Created:", result);
-      // 5. Update user profile with name & photo
+      console.log(newUser);
+      await getToken(email);
+      await saveUser(newUser);
+      await createUser(email, password);
       await updateUserProfile(name, photoUrl);
-      // 6. Toast and Redirect
+
       toast.success("Registration successful!");
       navigate(from, { replace: true });
     } catch (error) {
@@ -91,7 +91,7 @@ const Register = () => {
         <div
           className={`md:flex mx-auto py-5 md:shadow-2xl shadow-blue-200 md:px-10 px-3 items-center rounded-lg ${
             isRegistering ? "opacity-50" : "opacity-100"
-          }`} // Reduce opacity during registration
+          }`}
         >
           <div className="contact_img flex-1 w-full">
             <Lottie
@@ -105,12 +105,11 @@ const Register = () => {
               Create Account
             </h2>
 
-            <form onSubmit={handleRegister} className="">
+            <form onSubmit={handleRegister}>
               <label
                 htmlFor="photo"
                 className="relative cursor-pointer w-20 h-20 block mx-auto mb-1"
               >
-                {/* Hidden file input */}
                 <input
                   type="file"
                   name="photo"
@@ -118,18 +117,15 @@ const Register = () => {
                   className="hidden"
                   onChange={handlePhotoChange}
                 />
-
-                {/* Profile Image */}
                 <figure className="w-full h-full">
                   <img
-                    className="rounded-full w-full h-full object-cover border-2 border-blue-500"
+                    className="rounded-full w-full h-full object-cover -2 -blue-500"
                     src={
                       photoPreview ||
                       "https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png"
                     }
                   />
-                  {/* Overlay Text */}
-                  <p className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold text-xs text-center rounded-full opacity-80 hover:opacity-100 transition-opacity duration-200 ">
+                  <p className="absolute inset-0 flex items-center justify-center bg-black/40 text-white font-semibold text-xs text-center rounded-full opacity-80 hover:opacity-100 transition-opacity duration-200">
                     Choose a photo
                   </p>
                 </figure>
@@ -140,46 +136,43 @@ const Register = () => {
                 type="text"
                 name="name"
                 placeholder="Your Name"
-                className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                disabled={isRegistering} // Disable input during registration
+                className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                disabled={isRegistering}
               />
               <input
+                required
                 type="email"
                 name="email"
                 placeholder="Your email"
-                className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                disabled={isRegistering} // Disable input during registration
+                className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                disabled={isRegistering}
               />
               <div className="flex gap-2 w-full">
                 <input
-                  required
                   type="number"
                   name="roll"
-                  placeholder="Roll Number"
-                  className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                  disabled={isRegistering} // Disable input during registration
+                  placeholder="Roll Number (Optional)"
+                  className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                  disabled={isRegistering}
                 />
                 <input
                   required
                   type="number"
                   name="phone"
-                  placeholder="Your Phone Number"
-                  className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                  disabled={isRegistering} // Disable input during registration
+                  placeholder="Phone Number"
+                  className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                  disabled={isRegistering}
                 />
               </div>
+
               <div className="flex gap-2">
-                {/* Semester Dropdown */}
                 <select
                   name="semester"
-                  required
-                  className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
+                  className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
                   disabled={isRegistering}
                   defaultValue=""
                 >
-                  <option value="" disabled>
-                    Select Semester
-                  </option>
+                  <option value="">Semester (Optional)</option>
                   <option value="1st">1st</option>
                   <option value="2nd">2nd</option>
                   <option value="3rd">3rd</option>
@@ -190,72 +183,73 @@ const Register = () => {
                   <option value="8th">8th</option>
                 </select>
 
-                {/* Department Dropdown */}
                 <select
                   name="department"
-                  required
-                  className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
+                  className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
                   disabled={isRegistering}
                   defaultValue=""
                 >
-                  <option className="" value="" disabled>
-                    Select Department
-                  </option>
+                  <option value="">Department (Optional)</option>
                   <option value="CST">CST</option>
                   <option value="ET">ET</option>
                   <option value="CT">CT</option>
                 </select>
               </div>
+
+              <select
+                name="role"
+                className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                value={role}
+                onChange={(e) => setRole(e.target.value)}
+              >
+                <option value="user">I am a Student</option>
+                <option value="Teacher">I am a Teacher</option>
+              </select>
+
               <input
                 required
                 type="password"
-                placeholder="Password"
                 name="password"
-                className="w-full p-[12px_20px] rounded-[5px] border-[1px] border-[#ddd] mb-[15px] bg-[#f0f0f0] text-[16px] focus:outline-none"
-                disabled={isRegistering} // Disable input during registration
+                placeholder="Password"
+                className="w-full p-[12px_20px] rounded-[5px]  mb-[15px] bg-[#f0f0f0] focus:outline-none"
+                disabled={isRegistering}
               />
 
               <div className="flex gap-[15px] items-center mb-1">
                 <input
-                  required
                   type="checkbox"
                   checked={isChecked}
-                  onChange={(e) => setIsChecked(e.target.checked)} // Update state on change
-                  disabled={isRegistering} // Disable checkbox during registration
+                  onChange={(e) => setIsChecked(e.target.checked)}
+                  disabled={isRegistering}
                 />
                 <p>
                   I agree to the{" "}
-                  <a
-                    href="#"
-                    className="text-[#1447e6] no-underline hover:underline"
-                  >
+                  <a href="#" className="text-[#1447e6] hover:underline">
                     Terms
                   </a>{" "}
                   and{" "}
-                  <a
-                    href="#"
-                    className="text-[#1447e6] no-underline hover:underline"
-                  >
+                  <a href="#" className="text-[#1447e6] hover:underline">
                     Privacy Policy.
                   </a>
                 </p>
               </div>
+
               <button
                 type="submit"
-                className={`w-full py-2 rounded-[6px] text-[17px] cursor-pointer transition-all duration-300 font-[500] ${
+                className={`w-full py-2 rounded-[6px] text-[17px] font-[500] transition-all duration-300 ${
                   isChecked && !isRegistering
                     ? "bg-[#1447e6] text-white hover:bg-white hover:text-[#1447e6]"
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
-                disabled={!isChecked || isRegistering} // Disable button if checkbox is not checked or registration is ongoing
+                disabled={!isChecked || isRegistering}
               >
                 {isRegistering ? "Registering..." : "Sign Up"}
               </button>
             </form>
 
             <p className="text-sm font-semibold text-gray-600 my-2">
-              You already have a account?{" "}
-              <Link to={"/login"} className="text-blue-700 text-base ">
+              Already have an account?{" "}
+              <Link to="/login" className="text-blue-700 text-base">
                 Login
               </Link>
             </p>

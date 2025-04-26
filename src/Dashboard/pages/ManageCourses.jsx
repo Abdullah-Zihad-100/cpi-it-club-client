@@ -1,39 +1,57 @@
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { useState } from "react";
-import { addCourse, deletedCourse, getCourses } from "../../Apis/apis";
+import {
+  addCourse,
+  deletedCourse,
+  getCourses,
+  imgUplord,
+} from "../../Apis/apis";
 import Title from "../../Components/Title";
 import Loader from "../../Components/Loader";
+import ImageUploadInput from "../../Components/ImageUploadInput";
+import ConfirmModal from "../../Components/ConfirmModal";
 
 export default function CourseManagement() {
-  const { data: courses = [], refetch ,isPending} = useQuery({
+  const {
+    data: courses = [],
+    refetch,
+    isPending,
+  } = useQuery({
     queryKey: ["courses"],
     queryFn: getCourses,
   });
 
+  const [imageFile, setImageFile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
   const handleAddCourse = async (e) => {
     e.preventDefault();
     const form = e.target;
-
-    const newCourse = {
-      title: form.title.value,
-      description: form.description.value,
-      topics: form.topics.value.split(",").map((t) => t.trim()),
-      mentor: form.mentor.value,
-      modules: form.modules.value,
-      duration: form.duration.value,
-      mode: form.mode.value,
-      img: form.img.value,
-    };
-
     try {
       setLoading(true);
+
+      let imgUrl = "";
+      if (imageFile) {
+        imgUrl = await imgUplord(imageFile);
+      }
+      const newCourse = {
+        title: form.title.value,
+        description: form.description.value,
+        topics: form.topics.value.split(",").map((t) => t.trim()),
+        mentor: form.mentor.value,
+        modules: form.modules.value,
+        duration: form.duration.value,
+        mode: form.mode.value,
+        img: imgUrl,
+      };
       const result = await addCourse(newCourse);
       if (result.insertedId) {
         toast.success("Course added successfully");
-        // form.reset();
+        form.reset();
+        setImageFile(null);
         refetch();
       }
     } catch (err) {
@@ -44,17 +62,22 @@ export default function CourseManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      console.log(id);
-      const res = await deletedCourse(id);
-     if (res.deletedCount > 0) {
-       toast.success("Course deleted");
-       refetch();
-     }
+  const handleDeleteClick = (id) => {
+    setCourseToDelete(id);
+    setShowModal(true);
+  };
 
+  const handleDelete = async () => {
+    try {
+      const res = await deletedCourse(courseToDelete);
+      if (res.deletedCount > 0) {
+        toast.success("Course deleted");
+        refetch();
+      }
     } catch {
       toast.error("Delete failed");
+    } finally {
+      setShowModal(false);
     }
   };
 
@@ -90,7 +113,6 @@ export default function CourseManagement() {
               type: "text",
               placeholder: "Class Mode (Online/Offline)",
             },
-            { name: "img", type: "text", placeholder: "Image URL" },
           ].map((input, i) =>
             input.type === "textarea" ? (
               <textarea
@@ -111,6 +133,13 @@ export default function CourseManagement() {
               />
             )
           )}
+
+          {/* Image Upload Component */}
+          <ImageUploadInput
+            onChange={(e) => setImageFile(e.target.files[0])}
+            name="imgUrl"
+          />
+
           <button
             type="submit"
             disabled={loading}
@@ -122,56 +151,62 @@ export default function CourseManagement() {
       </div>
 
       {/* All Courses List */}
-    {
-      isPending ? 
-      <Loader/>
-      :
+      {isPending ? (
+        <Loader />
+      ) : (
         <div className="h-full">
-       <Title heading={"All Courses"}/>
-        <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
-          {courses?.map((course) => (
-            <div
-              key={course._id}
-              className="bg-white border border-gray-200 rounded shadow p-4 space-y-3"
-            >
-              <img
-                src={course.img}
-                alt={course.title}
-                className="w-full h-48 object-cover rounded"
-              />
-              <h3 className="text-xl font-semibold text-blue-700">
-                {course.title}
-              </h3>
-              <p className="text-gray-600 text-sm line-clamp-2">
-                {course.description}
-              </p>
-              <div className="text-sm text-gray-500 space-y-1">
-                <p>
-                  <span className="font-medium text-gray-700">Mentor:</span>{" "}
-                  {course.mentor}
-                </p>
-                <p>
-                  <span className="font-medium text-gray-700">Mode:</span>{" "}
-                  {course.mode}
-                </p>
-                <p>
-                  <span className="font-medium text-gray-700">Modules:</span>{" "}
-                  {course.modules} |{" "}
-                  <span className="font-medium text-gray-700">Duration:</span>{" "}
-                  {course.duration}
-                </p>
-              </div>
-              <button
-                onClick={() => handleDelete(course._id)}
-                className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 cursor-pointer py-1 rounded text-sm transition"
+          <Title heading={"All Courses"} />
+          <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-2">
+            {courses?.map((course) => (
+              <div
+                key={course._id}
+                className="bg-white border border-gray-200 rounded shadow p-4 space-y-3"
               >
-                Delete
-              </button>
-            </div>
-          ))}
+                <img
+                  src={course.img}
+                  alt={course.title}
+                  className="w-full h-48 object-cover rounded"
+                />
+                <h3 className="text-xl font-semibold text-blue-700">
+                  {course.title}
+                </h3>
+                <p className="text-gray-600 text-sm line-clamp-2">
+                  {course.description}
+                </p>
+                <div className="text-sm text-gray-500 space-y-1">
+                  <p>
+                    <span className="font-medium text-gray-700">Mentor:</span>{" "}
+                    {course.mentor}
+                  </p>
+                  <p>
+                    <span className="font-medium text-gray-700">Mode:</span>{" "}
+                    {course.mode}
+                  </p>
+                  <p>
+                    <span className="font-medium text-gray-700">Modules:</span>{" "}
+                    {course.modules} |{" "}
+                    <span className="font-medium text-gray-700">Duration:</span>{" "}
+                    {course.duration}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleDeleteClick(course._id)}
+                  className="mt-2 bg-red-500 hover:bg-red-600 text-white px-4 cursor-pointer py-1 rounded text-sm transition"
+                >
+                  Delete
+                </button>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    }
+      )}
+
+      {/* Modal for Confirmation */}
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 }

@@ -19,12 +19,17 @@ const CourseSection = () => {
   return (
     <div className="max-w-7xl mx-auto py-10">
       <Title heading={"Our Courses"} title={"All the courses we provide"} />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2  gap-5 justify-items-center items-center px-4">
-        {displayedCourses.map((course) => (
-          <CourseCard key={course._id} course={course} />
-        ))}
-      </div>
+      {displayedCourses.length < 0 ? (
+        <p className="sm:text-3xl text-xl text-center my-20">
+          No Data Available....
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2  gap-5 justify-items-center items-center px-4">
+          {displayedCourses.map((course) => (
+            <CourseCard key={course._id} course={course} />
+          ))}
+        </div>
+      )}
 
       {courses.length > 4 && (
         <button

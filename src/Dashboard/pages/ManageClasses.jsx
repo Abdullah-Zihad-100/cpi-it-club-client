@@ -4,6 +4,9 @@ import { toast } from "react-hot-toast";
 import ClassCard from "../../Components/ClassCard";
 import Loader from "../../Components/Loader";
 import Title from "../../Components/Title";
+import { useState } from "react";
+import { imgUplord } from "../../Apis/apis";
+import ImageUploadInput from "../../Components/ImageUploadInput";
 
 const fetchAllClasses = async () => {
   const res = await axiosSecure.get("/classes");
@@ -11,6 +14,9 @@ const fetchAllClasses = async () => {
 };
 
 const ManageClasses = () => {
+  const [imageFile, setImageFile] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
+
   const {
     data: classes = [],
     refetch,
@@ -20,35 +26,48 @@ const ManageClasses = () => {
     queryFn: fetchAllClasses,
   });
 
-  //   add a class
   const handleAdd = async (e) => {
     e.preventDefault();
     const form = e.target;
-    const newClass = {
-      classSubject: form.classSubject.value,
-      topics: form.topics.value,
-      classMode: form.classMode.value,
-      description: form.description.value,
-      mentor: form.mentor.value,
-      classDuration: form.classDuration.value,
-      classDate: form.classDate.value,
-      img: form.img.value,
-      link: form.link.value,
-      isPin: form.isPinned.checked,
-    };
+
     try {
-      await axiosSecure.post("/classes", newClass);
+      setIsAdding(true);
+
+      let imgUrl = "";
+      if (imageFile) {
+        imgUrl = await imgUplord(imageFile);
+      }
+
+      const newClass = {
+        classSubject: form.classSubject.value,
+        topics: form.topics.value,
+        classMode: form.classMode.value,
+        description: form.description.value,
+        mentor: form.mentor.value,
+        classDuration: form.classDuration.value,
+        classDate: form.classDate.value,
+        img: imgUrl,
+        link: form.link.value,
+        isPin: form.isPinned.checked,
+      };
+
+      const res = await axiosSecure.post("/classes", newClass);
+      console.log(res.data);
       form.reset();
+      setImageFile(null);
       refetch();
-      toast.success("Class Add Successfully");
+      toast.success("Class added successfully");
     } catch (err) {
       console.error("Class add error:", err);
+      toast.error("Failed to add class");
+    } finally {
+      setIsAdding(false);
     }
   };
 
   return (
-    <div className=" max-w-7xl mx-auto p-4">
-      {/* Show All Classes */}
+    <div className="max-w-7xl mx-auto p-4">
+      {/* Add New Class */}
       {isPending ? (
         <Loader />
       ) : (
@@ -63,6 +82,7 @@ const ManageClasses = () => {
               placeholder="Enter class subject name"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={isAdding}
             />
             <input
               type="text"
@@ -70,12 +90,14 @@ const ManageClasses = () => {
               placeholder="Enter topics to be covered"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={isAdding}
             />
             <input
               type="text"
               name="classMode"
               placeholder="Enter class mode (Online / Offline)"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isAdding}
             />
             <textarea
               name="description"
@@ -83,6 +105,7 @@ const ManageClasses = () => {
               rows="3"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
               required
+              disabled={isAdding}
             ></textarea>
             <input
               type="text"
@@ -90,6 +113,7 @@ const ManageClasses = () => {
               placeholder="Enter mentor/instructor name"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={isAdding}
             />
             <input
               type="text"
@@ -97,40 +121,35 @@ const ManageClasses = () => {
               placeholder="Enter class duration (e.g. 2 hours)"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={isAdding}
             />
             <input
               type="date"
               name="classDate"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              disabled={isAdding}
             />
-
             <input
               type="text"
               name="link"
               placeholder="Enter online class link (optional)"
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isAdding}
             />
-            <input
-              type="file"
+            <ImageUploadInput
+            label={"Class Photo"}
               name="img"
-              accept="image/*"
               onChange={(e) => setImageFile(e.target.files[0])}
-              className="block w-full text-sm text-gray-500
-  file:mr-4 file:py-2 file:px-4
-  file:rounded-full file:border-0
-  file:text-sm file:font-semibold
-  file:bg-blue-50 file:text-blue-700
-  hover:file:bg-blue-100"
+              disabled={isAdding}
             />
-
             <div className="flex items-center space-x-2">
               <input
                 type="checkbox"
                 name="isPinned"
                 className="checkbox checkbox-primary"
+                disabled={isAdding}
               />
-
               <label htmlFor="isPinned" className="text-gray-700">
                 Pin this class
               </label>
@@ -138,15 +157,17 @@ const ManageClasses = () => {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg py-2 px-4 rounded-md transition-colors duration-300"
+              disabled={isAdding}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg py-2 px-4 rounded transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Add Class
+              {isAdding ? "Adding..." : "Add Class"}
             </button>
           </form>
         </div>
       )}
 
-      {/* Add New Class */}
+
+      {/* Show All Classes */}
       <div>
         <Title heading={"All Classes"} />
         {classes.map((classData) => (

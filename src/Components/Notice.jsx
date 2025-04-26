@@ -5,6 +5,7 @@ import { axiosSecure } from "../Apis/axios";
 
 const Notice = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSeen, setIsSeen] = useState(true);
 
   const [noticeData, setNoticeData] = useState();
   useEffect(() => {
@@ -19,9 +20,12 @@ const Notice = () => {
       {/* 🔔 Floating Notification Icon */}
       <div className="fixed bottom-5 right-5 z-20">
         <div className="relative">
-          <span className="absolute z-10 -top-1.5 -right-1.5 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow">
-            {noticeData?.length}
-          </span>
+          {isSeen && (
+            <span className="absolute z-10 -top-1.5 -right-1.5 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow">
+              {noticeData?.length}
+            </span>
+          )}
+
           <MdNotificationsActive
             size={60}
             className="text-blue-700 bg-blue-300 p-3 rounded-full shadow-lg hover:scale-105 transition-transform duration-300 cursor-pointer"
@@ -75,7 +79,9 @@ const Notice = () => {
             </ul>
 
             <button
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => {
+                setIsModalOpen(false), setIsSeen(false);
+              }}
               className="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-full transition duration-300"
             >
               Close Notice

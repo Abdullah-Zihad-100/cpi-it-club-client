@@ -4,6 +4,9 @@ import { FaTrash } from "react-icons/fa";
 import { axiosSecure } from "../../Apis/axios";
 import toast from "react-hot-toast";
 import Title from "../../Components/Title";
+import ImageUploadInput from "../../Components/ImageUploadInput";
+import { imgUplord } from "../../Apis/apis";
+import ConfirmModal from "../../Components/ConfirmModal";
 
 const ManageMembers = () => {
   const [formData, setFormData] = useState({
@@ -12,13 +15,17 @@ const ManageMembers = () => {
     post: "",
     description: "",
     fbLink: "",
-    instagramLink: "",
+    email: "",
     linkedinLink: "",
-    profile: "",
     isPresident: false,
+    isTeacher: false,
   });
 
-  // fetch all members
+  const [showModal, setShowModal] = useState(false);
+  const [deleteId, setDeleteId] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const {
     data: members = [],
     isLoading,
@@ -31,19 +38,32 @@ const ManageMembers = () => {
     },
   });
 
-  // input change handler
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     const val = type === "checkbox" ? checked : value;
     setFormData({ ...formData, [name]: val });
   };
 
-  // submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
+
     try {
-      await axiosSecure.post("/members", formData);
+      let imageUrl = "";
+
+      if (imageFile) {
+        imageUrl = await imgUplord(imageFile); // Upload to ImgBB
+      }
+
+      const memberData = {
+        ...formData,
+        profile: imageUrl, // set profile field as image URL
+      };
+
+      await axiosSecure.post("/members", memberData);
       toast.success("Member added successfully!");
+
+      // Reset form
       setFormData({
         name: "",
         semester: "",
@@ -52,39 +72,40 @@ const ManageMembers = () => {
         fbLink: "",
         email: "",
         linkedinLink: "",
-        profile: "",
         isPresident: false,
+        isTeacher: false,
       });
+      setImageFile(null);
       refetch();
     } catch (err) {
       console.error("Error adding member:", err);
       toast.error("Failed to add member!");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  // delete handler
-  const handleDelete = async (id) => {
-    const confirm = window.confirm("Are you sure to delete this member ?");
-    if (!confirm) return;
-    try {
-      await axiosSecure.delete(`/member/${id}`);
-      toast.success("Member deleted successfully!");
-      refetch();
-    } catch (err) {
-      console.error("Error deleting member:", err);
-      toast.error("Failed to delete member!");
-    }
-  };
+const handleDelete = async () => {
+  try {
+    await axiosSecure.delete(`/member/${deleteId}`);
+    toast.success("Member deleted successfully!");
+    refetch();
+  } catch (err) {
+    console.error("Error deleting member:", err);
+    toast.error("Failed to delete member!");
+  } finally {
+    setShowModal(false);
+  }
+};
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 md:p-6">
       {/* Form Section */}
-      <div className="bg-white shadow-2xl p-6 rounded-2xl text-center">
+      <div className="bg-white shadow-xl p-6 rounded-2xl text-center">
         <h2 className="text-3xl font-semibold mb-6 text-blue-700">
-          Add Member
+          Add Member / Teacher
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Loop for all other fields except semester */}
           {[
             { name: "name", placeholder: "Name", required: true },
             { name: "post", placeholder: "Post", required: true },
@@ -92,11 +113,6 @@ const ManageMembers = () => {
             { name: "fbLink", placeholder: "Facebook Link" },
             { name: "email", placeholder: "Email Id" },
             { name: "linkedinLink", placeholder: "LinkedIn Link" },
-            {
-              name: "profile",
-              placeholder: "Profile Image URL",
-              required: true,
-            },
           ].map(({ name, placeholder, required }) => (
             <input
               key={name}
@@ -105,17 +121,17 @@ const ManageMembers = () => {
               onChange={handleChange}
               placeholder={placeholder}
               required={required}
+              disabled={isSubmitting}
               className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           ))}
 
-          {/* Semester Dropdown */}
           <select
             name="semester"
             value={formData.semester}
             onChange={handleChange}
+            disabled={isSubmitting}
             className="w-full p-2 border border-gray-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
-            required
           >
             <option value="" disabled>
               Select Semester
@@ -136,29 +152,49 @@ const ManageMembers = () => {
             ))}
           </select>
 
-          {/* President checkbox */}
-          <label className="flex items-center gap-2 text-blue-600 font-medium">
-            <input
-              type="checkbox"
-              name="isPresident"
-              checked={formData.isPresident}
-              onChange={handleChange}
-              className="accent-blue-600"
-            />
-            President?
-          </label>
+          {/* Image input */}
+          <ImageUploadInput
+            onChange={(e) => setImageFile(e.target.files[0])}
+            name="profile"
+          />
+
+          <div className="flex items-center justify-between">
+            <label className="flex items-center gap-2 text-blue-600 font-medium">
+              <input
+                type="checkbox"
+                name="isPresident"
+                checked={formData.isPresident}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                className="accent-blue-600"
+              />
+              President?
+            </label>
+            <label className="flex items-center gap-2 text-blue-600 font-medium">
+              <input
+                type="checkbox"
+                name="isTeacher"
+                checked={formData.isTeacher}
+                onChange={handleChange}
+                disabled={isSubmitting}
+                className="accent-blue-600"
+              />
+              Teacher?
+            </label>
+          </div>
 
           <button
             type="submit"
+            disabled={isSubmitting}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full transition-all duration-300"
           >
-            Add Member
+            {isSubmitting ? "Adding..." : "Add Member"}
           </button>
         </form>
       </div>
 
-      {/* All Members Section */}
-      <div className="bg-white shadow-2xl p-6 rounded-2xl ">
+      {/* Members List */}
+      <div className="bg-white shadow-xl p-6 rounded-2xl">
         <Title heading={"All Members"} />
         {isLoading ? (
           <p className="text-blue-500 font-medium">Loading members...</p>
@@ -179,6 +215,16 @@ const ManageMembers = () => {
                     {member.name}{" "}
                     <span className="text-sm text-blue-500">
                       ({member.post})
+                      {member.isPresident && (
+                        <span className="text-red-500 font-bold ml-1">
+                          • President
+                        </span>
+                      )}
+                      {member.isTeacher && (
+                        <span className="text-green-500 font-bold ml-1">
+                          • Teacher
+                        </span>
+                      )}
                     </span>
                   </p>
                   <p className="text-sm text-gray-600">
@@ -186,7 +232,10 @@ const ManageMembers = () => {
                   </p>
                 </div>
                 <button
-                  onClick={() => handleDelete(member._id)}
+                  onClick={() => {
+                    setDeleteId(member._id);
+                    setShowModal(true);
+                  }}
                   className="text-red-500 hover:text-red-700 text-xl"
                 >
                   <FaTrash />
@@ -196,6 +245,11 @@ const ManageMembers = () => {
           </div>
         )}
       </div>
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={handleDelete}
+      />
     </div>
   );
 };
