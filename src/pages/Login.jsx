@@ -77,7 +77,7 @@ const Login = () => {
             required
             placeholder="Email"
             onChange={(e) => setResetEmail(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+            className="w-full px-4 py-3 rounded-lg  text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
             disabled={isLoggingIn}
           />
           <input
@@ -85,7 +85,7 @@ const Login = () => {
             name="password"
             required
             placeholder="Password"
-            className="w-full px-4 py-3 rounded-lg bg-white/30 text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
+            className="w-full px-4 py-3 rounded-lg  text-white placeholder:text-white/70 backdrop-blur-md border border-white/30 focus:outline-none focus:ring-2 focus:ring-white"
             disabled={isLoggingIn}
           />
           <div

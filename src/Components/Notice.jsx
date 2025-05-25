@@ -1,19 +1,20 @@
 import { MdNotificationsActive } from "react-icons/md";
 import { IoClose } from "react-icons/io5";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { axiosSecure } from "../Apis/axios";
+import { useQuery } from "@tanstack/react-query";
 
 const Notice = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSeen, setIsSeen] = useState(true);
 
-  const [noticeData, setNoticeData] = useState();
-  useEffect(() => {
-    axiosSecure("http://localhost:5000/notice").then((res) =>
-      setNoticeData(res?.data)
-    );
-  }, []);
-  console.log(noticeData);
+const { data: noticeData = [] } = useQuery({
+  queryKey: ["notice"],
+  queryFn: async () => {
+    const res = await axiosSecure.get("/notice");
+    return res?.data;
+  },
+});
 
   return (
     <div>
@@ -57,7 +58,7 @@ const Notice = () => {
       {/* 🟣 Glassy Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-30 backdrop-blur-sm bg-black/30 flex items-center justify-center w-full">
-          <div className="bg-white max-w-md sm:max-w-lg w-full p-6 rounded-2xl shadow-2xl relative text-blue-800 animate-fadeInScale">
+          <div className="bg-white max-w-md sm:max-w-lg w-full p-3 sm:p-6 rounded-2xl shadow-2xl relative text-blue-800 animate-fadeInScale sm:mx-0 mx-2">
             {/* Close Button */}
             <button
               onClick={() => setIsModalOpen(false)}
@@ -66,11 +67,11 @@ const Notice = () => {
               <IoClose />
             </button>
 
-            <h2 className="text-2xl font-bold mb-4 text-blue-700">
+            <h2 className="sm:text-2xl font-bold mb-4 text-blue-700">
               📢 IT Club Notices
             </h2>
 
-            <ul className="list-disc list-inside space-y-2 text-blue-600">
+            <ul className="list-disc list-inside space-y-2 text-blue-600 sm:text-base text-xs">
               {noticeData?.length > 0
                 ? noticeData?.map((not) => (
                     <li key={not?._id}>{not?.title} </li>

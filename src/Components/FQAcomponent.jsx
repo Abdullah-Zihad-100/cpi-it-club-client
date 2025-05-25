@@ -27,7 +27,6 @@ const data = {
   ],
 };
 
-
 const FAQComponent = () => {
   return (
     <div className="px-5">
@@ -40,14 +39,15 @@ Frequently asked questions"
         data={data}
         styles={{
           rowTitleColor: "black",
-          rowTitleTextSize: "23px",
+          rowTitleTextSize: "21px",
+          rowContentTextSize: "15px",
           transitionDuration: "0.3s",
           timingFunc: "linear",
           rowContentColor: "#333030",
           rowContentPaddingTop: "10px",
           rowContentPaddingBottom: "10px",
           rowContentPaddingLeft: "20px",
-          rowContentPaddingRight: "150px",
+          rowContentPaddingRight: "20px",
         }}
       />
     </div>

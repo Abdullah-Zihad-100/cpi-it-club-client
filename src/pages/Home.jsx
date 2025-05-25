@@ -18,7 +18,6 @@ const Home = () => {
       <FeaturedEventSec />
       <CouseSection />
       <FunSection />
-
       <Team />
     </div>
   );

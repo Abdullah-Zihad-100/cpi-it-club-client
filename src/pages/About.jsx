@@ -18,7 +18,6 @@ const About = () => {
               student-run clubs at CPI College. It is run by a group of creative
               and tech-savvy students. With our goal in mind, we organize a
               series of sessions, seminars, training programs and competitions.
-              Since our founding in 2004, we have been and still are looking for
               opportunities to help students in any way possible and all we have
               set out is to strive to guide students in the right direction.
             </p>

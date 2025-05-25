@@ -2,6 +2,8 @@ import { Outlet, useLocation } from "react-router";
 import Navbar from "../Components/Navbar";
 import useAxiosInterceptor from "../Hooks/useAxiosInterceptor";
 import Footer from "../Components/Footer";
+import CookieCheckModal from "../Components/CookiesCheckModal";
+import ScrollToTop from "../Components/ScrollToTop";
 
 
 const MainLayout = () => {
@@ -16,7 +18,9 @@ const shouldHideFooter = hiddenFooterRoute.some((path) =>
   return (
     <div className="font-primary">
       <Navbar />
+      <ScrollToTop />
       <div className="">
+        <CookieCheckModal />
         <Outlet />
       </div>
       {!shouldHideFooter && <Footer />}

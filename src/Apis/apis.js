@@ -37,7 +37,7 @@ export const imgUplord = async (image) => {
     const formData = new FormData();
     formData.append("image", image);
     const response = await axios.post(
-      `https://api.imgbb.com/1/upload?key=ca1d8160771e38600b30f7bd7e2369aa`,
+      `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_imgbbApiKey}`,
       formData
     );
 
@@ -114,14 +114,11 @@ export const getUserAssignments = async (email) => {
   return res.data;
 };
 
-
 // get all assignments
 export const getAllAssignments = async () => {
   const res = await axiosSecure.get(`/assignments`);
   return res.data;
 };
-
-
 
 // delete a assignments
 
@@ -130,9 +127,8 @@ export const deleteAssignment = async (id) => {
   return res.data;
 };
 
-
 // PATCH update mark by id
 export const updateAssignmentMark = async (id, mark) => {
-  const res = await axiosSecure.patch(`/assignment/${id}`,{mark})
+  const res = await axiosSecure.patch(`/assignment/${id}`, { mark });
   return res.data;
 };

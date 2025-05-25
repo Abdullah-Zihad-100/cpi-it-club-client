@@ -27,6 +27,7 @@ import ManageAssignments from "../Dashboard/pages/ManageAssignments";
 import Contact from "../pages/Contact";
 import GameSec from "../Components/GameSec";
 import ErrorPage from "../pages/ErrorPage";
+import Statistics from "../Dashboard/pages/statistics";
 
 export const Router = createBrowserRouter([
   {
@@ -152,6 +153,10 @@ export const Router = createBrowserRouter([
       {
         path: "manage-assignments",
         element: <ManageAssignments />,
+      },
+      {
+        path: "statistics",
+        element: <Statistics />,
       },
     ],
   },

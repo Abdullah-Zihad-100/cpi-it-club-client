@@ -19,7 +19,7 @@ const CourseSection = () => {
   return (
     <div className="max-w-7xl mx-auto py-10">
       <Title heading={"Our Courses"} title={"All the courses we provide"} />
-      {displayedCourses.length < 0 ? (
+      {displayedCourses.length === 0 ? (
         <p className="sm:text-3xl text-xl text-center my-20">
           No Data Available....
         </p>

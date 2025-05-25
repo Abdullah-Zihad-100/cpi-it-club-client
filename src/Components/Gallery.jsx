@@ -19,7 +19,7 @@ export default function Gallery() {
   return (
     <div className="overflow-hidden px-5">
       <Title heading="Gallery" title="Our Gallery Images (CPI IT CLUB)" />
-      {imgs?.length < 0 ? (
+      {imgs?.length === 0 ? (
         <p className="sm:text-3xl text-xl text-center my-20">
           No Data Available....
         </p>

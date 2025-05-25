@@ -6,15 +6,16 @@ import { FreeMode, Pagination } from "swiper/modules";
 import ProfileCard from "../Components/ProfileCard";
 import Title from "./Title";
 import { axiosSecure } from "../Apis/axios";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 const Team = () => {
-  const [teamData, setTeamData] = useState();
-  useEffect(() => {
-    axiosSecure("/members").then((res) => setTeamData(res?.data));
-  }, []);
-  console.log(teamData);
+  const { data: teamData = [] } = useQuery({
+    queryKey: ["members"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/members");
+      return res.data;
+    },
+  });
   return (
     <div className="max-w-7xl mx-auto py-20 px-5">
       <Title heading="Meet Our Team" title="Get to know our team members" />
@@ -50,7 +51,7 @@ const Team = () => {
           },
         }}
       >
-        {teamData?.length < 1 ? (
+        {teamData?.length === 0 ? (
           <h4 className="sm:text-3xl text-xl text-center my-32">No members available</h4>
         ) : (
           teamData?.map((teamMember, index) => (

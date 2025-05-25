@@ -12,8 +12,8 @@ const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { user, logOut } = useAuth();
-const {role}=useRole();
-console.log("User role------>",role);
+  const { role } = useRole();
+  console.log("User role------>", role);
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
     setIsProfileOpen(false);
@@ -102,7 +102,7 @@ console.log("User role------>",role);
 
       {role === "admin" && (
         <NavLink
-          to="/dashboard/manage-notice"
+          to="/dashboard/statistics"
           onClick={() => setIsToggle(false)}
           className={({ isActive }) =>
             isActive ? "border-b-2 font-semibold" : "hover:text-blue-500"
@@ -136,17 +136,20 @@ console.log("User role------>",role);
     <nav
       className={`${
         isScrolled ? "bg-white/60 backdrop-blur-lg" : "bg-blue-700"
-      } p-5 fixed w-full z-20 transition-all duration-300`}
+      } p-3 fixed w-full z-20 transition-all duration-300`}
     >
       <div className="flex justify-between items-center max-w-7xl mx-auto">
         {/* Logo */}
         <div>
-          <img
-            className="bg-white rounded-full"
-            width={50}
-            src="/It-Club-Logo.png"
-            alt="IT Club Logo"
-          />
+          <Link to={"/"}>
+            {" "}
+            <img
+              className="bg-white rounded-full  border-blue-700 border-2"
+              width={60}
+              src="/It-Club-Logo.png"
+              alt="IT Club Logo"
+            />
+           </Link>
         </div>
 
         {/* Desktop Links */}
@@ -239,7 +242,9 @@ console.log("User role------>",role);
         >
           {Links}
           {user?.email ? (
-            <div className="space-y-2 text-[14px] text-blue-500 flex flex-col"> <hr />
+            <div className="space-y-2 text-[14px] text-blue-500 flex flex-col">
+              {" "}
+              <hr />
               <Link
                 to="/profile"
                 onClick={() => setIsToggle(false)}

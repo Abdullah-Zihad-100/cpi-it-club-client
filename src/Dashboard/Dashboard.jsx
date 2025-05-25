@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { IoIosNotifications, IoMdPhotos } from "react-icons/io";
+import { FcStatistics } from "react-icons/fc";
 import {
   FaChalkboardTeacher,
   FaBook,
@@ -48,6 +49,17 @@ const Dashboard = () => {
         </div>
 
         <nav className="space-y-3">
+          <NavLink
+            to="statistics"
+            className={({ isActive }) =>
+              `flex items-center gap-2 pb-1 transition ${
+                isActive ? "border-b-2 border-white " : "hover:text-blue-300"
+              }`
+            }
+          >
+            <FcStatistics />
+            statistics
+          </NavLink>
           <NavLink
             to="manage-notice"
             className={({ isActive }) =>

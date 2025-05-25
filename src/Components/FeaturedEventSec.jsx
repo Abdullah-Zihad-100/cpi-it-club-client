@@ -17,7 +17,7 @@ const FeaturedEventSec = () => {
         heading="Featured Events"
         title="Check out our workshops and sessions"
       />
-      {eventData.length < 0 ? (
+      {eventData.length === 0 ? (
         <p className="sm:text-3xl text-xl text-center my-20">No Data Available....</p>
       ) : (
         eventData
